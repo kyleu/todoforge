@@ -4,7 +4,7 @@ package util
 const (
 	AppKey     = "todoforge"
 	AppName    = "TODO Forge"
-	AppSummary = "A Test application, built with Project Forge"
+	AppSummary = "Manages collections of todo items. Almost entirely generated using Project Forge"
 	AppPort    = 11000
 	AppContact = "Kyle U <todoforge@kyleu.com>"
 	AppURL     = "https://github.com/kyleu/todoforge"

@@ -76,7 +76,7 @@ func (s *Service) GetByCollectionID(ctx context.Context, tx *sqlx.Tx, collection
 	return ret.ToItems(), nil
 }
 
-const searchClause = "(lower(id::text) like $1 or lower(name) like $1)"
+const searchClause = "(lower(id) like $1 or lower(name) like $1)"
 
 func (s *Service) Search(ctx context.Context, query string, tx *sqlx.Tx, params *filter.Params, logger util.Logger) (Items, error) {
 	params = filters(params)

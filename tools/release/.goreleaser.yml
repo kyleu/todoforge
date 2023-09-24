@@ -18,7 +18,7 @@ brews:
       email: "todoforge@kyleu.com"
     folder: Formula
     homepage: "https://github.com/kyleu/todoforge"
-    description: "This app is pretty much totally generated via Project Forge"
+    description: "This app is almost entirely generated via Project Forge"
     license: "CC0"
     skip_upload: "false"
     install: "bin.install \"todoforge\""
@@ -58,7 +58,7 @@ nfpms:
     vendor: "Kyle U"
     homepage: "https://github.com/kyleu/todoforge}"
     maintainer: "Kyle U <todoforge@kyleu.com>"
-    description: "This app is pretty much totally generated via Project Forge"
+    description: "This app is almost entirely generated via Project Forge"
     license: "CC0"
     formats:
       - apk
@@ -95,8 +95,8 @@ signs:
 snapcrafts:
   -
     publish: false
-    summary: "A Test application, built with Project Forge"
-    description: "This app is pretty much totally generated via Project Forge"
+    summary: "Manages collections of todo items. Almost entirely generated using Project Forge"
+    description: "This app is almost entirely generated via Project Forge"
     grade: stable
     confinement: strict
     license: "CC0"
