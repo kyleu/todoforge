@@ -1,0 +1,36 @@
+<!-- Content managed by Project Forge, see [projectforge.md] for details. -->
+{% import (
+  "github.com/kyleu/todoforge/app"
+  "github.com/kyleu/todoforge/app/collection"
+  "github.com/kyleu/todoforge/app/controller/cutil"
+  "github.com/kyleu/todoforge/views/components"
+  "github.com/kyleu/todoforge/views/layout"
+) %}
+
+{% code type Edit struct {
+  layout.Basic
+  Model *collection.Collection
+  IsNew bool
+} %}
+
+{% func (p *Edit) Body(as *app.State, ps *cutil.PageState) %}
+  <div class="card">
+    {%- if p.IsNew -%}
+    <div class="right"><a href="/collection/random"><button>Random</button></a></div>
+    <h3>{%= components.SVGRefIcon(`archive`, ps) %} New Collection</h3>
+    <form action="/collection/new" class="mt" method="post">
+    {%- else -%}
+    <div class="right"><a href="{%s p.Model.WebPath() %}/delete" onclick="return confirm('Are you sure you wish to delete collection [{%s p.Model.String() %}]?')"><button>Delete</button></a></div>
+    <h3>{%= components.SVGRefIcon(`archive`, ps) %} Edit Collection [{%s p.Model.String() %}]</h3>
+    <form action="" method="post">
+    {%- endif -%}
+      <table class="mt expanded">
+        <tbody>
+          {% if p.IsNew %}{%= components.TableInputUUID("id", "", "ID", &p.Model.ID, 5, "UUID in format (00000000-0000-0000-0000-000000000000)") %}{% endif %}
+          {%= components.TableInput("name", "", "Name", p.Model.Name, 5, "String text") %}
+          <tr><td colspan="2"><button type="submit">Save Changes</button></td></tr>
+        </tbody>
+      </table>
+    </form>
+  </div>
+{% endfunc %}

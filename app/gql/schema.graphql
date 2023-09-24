@@ -1,0 +1,10 @@
+scalar Time
+scalar UUID
+
+type Query {
+  hello: String!
+}
+
+type Mutation {
+  kill: String!
+}

@@ -1,0 +1,17 @@
+{% import (
+  "github.com/kyleu/todoforge/app"
+  "github.com/kyleu/todoforge/app/controller/cutil"
+  "github.com/kyleu/todoforge/app/util"
+  "github.com/kyleu/todoforge/views/components"
+  "github.com/kyleu/todoforge/views/layout"
+) %}
+
+{% code type Home struct {
+  layout.Basic
+} %}
+
+{% func (p *Home) Body(as *app.State, ps *cutil.PageState) %}
+  <div class="card">
+    <h3>{%= components.SVGRefIcon(`app`, ps) %}{%s util.AppName %}</h3>
+  </div>
+{% endfunc %}

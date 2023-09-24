@@ -1,0 +1,66 @@
+{
+  "name": "item",
+  "package": "item",
+  "group": [
+    "collection"
+  ],
+  "description": "TODO item",
+  "icon": "file",
+  "ordering": [
+    {
+      "column": "name",
+      "asc": false
+    }
+  ],
+  "tags": [
+    "search"
+  ],
+  "columns": [
+    {
+      "name": "id",
+      "type": "uuid",
+      "pk": true,
+      "search": true
+    },
+    {
+      "name": "collection_id",
+      "type": "uuid"
+    },
+    {
+      "name": "name",
+      "type": "string",
+      "search": true,
+      "tags": [
+        "title"
+      ]
+    },
+    {
+      "name": "created",
+      "type": "timestamp",
+      "sqlDefault": "current_timestamp",
+      "tags": [
+        "created"
+      ]
+    }
+  ],
+  "relations": [
+    {
+      "name": "item_fk",
+      "src": [
+        "collection_id"
+      ],
+      "table": "collection",
+      "tgt": [
+        "id"
+      ]
+    }
+  ],
+  "seedData": [
+    [
+      "10000000-0000-0000-0000-000000000001",
+      "10000000-0000-0000-0000-000000000000",
+      "Test Item",
+      "current_timestamp"
+    ]
+  ]
+}

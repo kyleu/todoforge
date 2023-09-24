@@ -1,0 +1,21 @@
+# Content managed by Project Forge, see [projectforge.md] for details.
+FROM golang:alpine
+
+LABEL "org.opencontainers.image.authors"="Kyle U"
+LABEL "org.opencontainers.image.source"="https://github.com/kyleu/todoforge"
+LABEL "org.opencontainers.image.vendor"="kyleu"
+LABEL "org.opencontainers.image.title"="TODO Forge"
+LABEL "org.opencontainers.image.description"="A Test application, built with Project Forge"
+
+RUN apk add --update --no-cache ca-certificates libc6-compat
+
+# main http port
+EXPOSE 11000
+# marketing port
+EXPOSE 11001
+
+WORKDIR /
+
+ENTRYPOINT ["/todoforge", "-a", "0.0.0.0"]
+
+COPY todoforge /

@@ -1,0 +1,46 @@
+{
+  "name": "collection",
+  "package": "collection",
+  "description": "Collection of TODO items",
+  "icon": "archive",
+  "ordering": [
+    {
+      "column": "name",
+      "asc": false
+    }
+  ],
+  "tags": [
+    "search"
+  ],
+  "columns": [
+    {
+      "name": "id",
+      "type": "uuid",
+      "pk": true,
+      "search": true
+    },
+    {
+      "name": "name",
+      "type": "string",
+      "search": true,
+      "tags": [
+        "title"
+      ]
+    },
+    {
+      "name": "created",
+      "type": "timestamp",
+      "sqlDefault": "current_timestamp",
+      "tags": [
+        "created"
+      ]
+    }
+  ],
+  "seedData": [
+    [
+      "10000000-0000-0000-0000-000000000000",
+      "Test Collection",
+      "current_timestamp"
+    ]
+  ]
+}

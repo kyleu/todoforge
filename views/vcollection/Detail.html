@@ -1,0 +1,71 @@
+<!-- Content managed by Project Forge, see [projectforge.md] for details. -->
+{% import (
+  "github.com/kyleu/todoforge/app"
+  "github.com/kyleu/todoforge/app/collection"
+  "github.com/kyleu/todoforge/app/collection/item"
+  "github.com/kyleu/todoforge/app/controller/cutil"
+  "github.com/kyleu/todoforge/app/lib/filter"
+  "github.com/kyleu/todoforge/app/util"
+  "github.com/kyleu/todoforge/views/components"
+  "github.com/kyleu/todoforge/views/layout"
+  "github.com/kyleu/todoforge/views/vcollection/vitem"
+) %}
+
+{% code type Detail struct {
+  layout.Basic
+  Model *collection.Collection
+  Params filter.ParamSet
+  RelItemsByCollectionID item.Items
+} %}
+
+{% func (p *Detail) Body(as *app.State, ps *cutil.PageState) %}
+  <div class="card">
+    <div class="right">
+      <a href="#modal-collection"><button type="button">JSON</button></a>
+      <a href="{%s p.Model.WebPath() %}/edit"><button>{%= components.SVGRef("edit", 15, 15, "icon", ps) %}Edit</button></a>
+    </div>
+    <h3>{%= components.SVGRefIcon(`archive`, ps) %} {%s p.Model.TitleString() %}</h3>
+    <div><a href="/collection"><em>Collection</em></a></div>
+    <table class="mt">
+      <tbody>
+        <tr>
+          <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">ID</th>
+          <td>{%= components.DisplayUUID(&p.Model.ID) %}</td>
+        </tr>
+        <tr>
+          <th class="shrink" title="String text">Name</th>
+          <td><strong>{%s p.Model.Name %}</strong></td>
+        </tr>
+        <tr>
+          <th class="shrink" title="Date and time, in almost any format">Created</th>
+          <td>{%= components.DisplayTimestamp(&p.Model.Created) %}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  {%- comment %}$PF_SECTION_START(extra)${% endcomment -%}
+  {%- comment %}$PF_SECTION_END(extra)${% endcomment -%}
+  <div class="card">
+    <h3 class="mb">Relations</h3>
+    <ul class="accordion">
+      <li>
+        <input id="accordion-ItemsByCollectionID" type="checkbox" hidden />
+        <label for="accordion-ItemsByCollectionID">
+          {%= components.ExpandCollapse(3, ps) %}
+          {%= components.SVGRefIcon(`file`, ps) %}
+          {%s util.StringPlural(len(p.RelItemsByCollectionID), "Item") %} by [Collection ID]
+        </label>
+        <div class="bd">
+          {%- if len(p.RelItemsByCollectionID) == 0 -%}
+          <em>no related Items</em>
+          {%- else -%}
+          <div class="overflow clear">
+            {%= vitem.Table(p.RelItemsByCollectionID, nil, p.Params, as, ps) %}
+          </div>
+          {%- endif -%}
+        </div>
+      </li>
+    </ul>
+  </div>
+  {%= components.JSONModal("collection", "Collection JSON", p.Model, 1) %}
+{% endfunc %}
