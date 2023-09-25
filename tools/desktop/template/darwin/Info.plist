@@ -9,7 +9,7 @@
     <key>CFBundleIconFile</key>
     <string>icons</string>
     <key>CFBundleIdentifier</key>
-    <string>com.kyleu.todoforge</string>
+    <string>dev.kyleu.todoforge</string>
     <key>CFBundleName</key>
     <string>TODO Forge</string>
     <key>CFBundlePackageType</key>

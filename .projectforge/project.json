@@ -34,15 +34,16 @@
     "authorID": "kyleu",
     "authorName": "Kyle U",
     "authorEmail": "todoforge@kyleu.com",
-    "license": "CC0",
+    "license": "MIT",
     "homepage": "https://github.com/kyleu/todoforge",
     "sourcecode": "https://github.com/kyleu/todoforge",
     "summary": "Manages collections of todo items. Almost entirely generated using Project Forge",
     "description": "This app is almost entirely generated via Project Forge",
-    "bundle": "com.kyleu.todoforge",
+    "bundle": "dev.kyleu.todoforge",
     "signingIdentity": "Developer ID Application: Kyle Unverferth (C6S478FYLD)",
+    "notarizeEmail": "kyle@kyleu.com",
     "databaseEngine": "sqlite",
-    "javaPackage": "com.kyleu.todoforge"
+    "javaPackage": "dev.kyleu.todoforge"
   },
   "theme": {
     "light": {
@@ -90,6 +91,7 @@
     "signing": true,
     "android": true,
     "iOS": true,
+    "wasm": true,
     "x86": true,
     "windowsARM": true,
     "linuxARM": true,
@@ -100,7 +102,6 @@
     "freeBSD": true,
     "netBSD": true,
     "openBSD": true,
-    "plan9": true,
     "solaris": true,
     "homebrew": true,
     "nfpms": true,

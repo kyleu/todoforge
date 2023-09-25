@@ -19,7 +19,7 @@ brews:
     folder: Formula
     homepage: "https://github.com/kyleu/todoforge"
     description: "This app is almost entirely generated via Project Forge"
-    license: "CC0"
+    license: "MIT"
     skip_upload: "false"
     install: "bin.install \"todoforge\""
 
@@ -56,10 +56,10 @@ dist: "build/dist"
 nfpms:
   -
     vendor: "Kyle U"
-    homepage: "https://github.com/kyleu/todoforge}"
+    homepage: "https://github.com/kyleu/todoforge"
     maintainer: "Kyle U <todoforge@kyleu.com>"
     description: "This app is almost entirely generated via Project Forge"
-    license: "CC0"
+    license: "MIT"
     formats:
       - apk
       - deb
@@ -99,7 +99,7 @@ snapcrafts:
     description: "This app is almost entirely generated via Project Forge"
     grade: stable
     confinement: strict
-    license: "CC0"
+    license: "MIT"
 
 snapshot:
   name_template: "{{ .Tag }}"
@@ -245,20 +245,6 @@ builds:
   - id: "openbsd"
     goos:
       - "openbsd"
-    goarch:
-      - "386"
-      - "amd64"
-      - "arm"
-      - "arm64"
-    goarm:
-      - "5"
-      - "6"
-      - "7"
-    mod_timestamp: "{{ .CommitTimestamp }}"
-
-  - id: "plan9"
-    goos:
-      - "plan9"
     goarch:
       - "386"
       - "amd64"

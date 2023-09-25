@@ -1,14 +1,14 @@
 # Content managed by Project Forge, see [projectforge.md] for details.
 source = ["./build/dist/darwin_darwin_all/todoforge"]
-bundle_id = "com.kyleu.todoforge"
+bundle_id = "dev.kyleu.todoforge"
 
 notarize {
   path = "./build/dist/todoforge_0.0.1_darwin_all_desktop.dmg"
-  bundle_id = "com.kyleu.todoforge"
+  bundle_id = "dev.kyleu.todoforge"
 }
 
 apple_id {
-  username = "todoforge@kyleu.com"
+  username = "kyle@kyleu.com"
   password = "@env:APPLE_PASSWORD"
 }
 

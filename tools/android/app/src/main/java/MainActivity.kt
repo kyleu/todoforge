@@ -1,5 +1,5 @@
 // Content managed by Project Forge, see [projectforge.md] for details.
-package com.kyleu.todoforge
+package dev.kyleu.todoforge
 
 import android.os.Bundle
 import android.util.Log
