@@ -1,4 +1,4 @@
-// Content managed by Project Forge, see [projectforge.md] for details.
+// Package doc - Content managed by Project Forge, see [projectforge.md] for details.
 package doc
 
 import (
@@ -19,7 +19,6 @@ func Content(path string) ([]byte, error) {
 	if err != nil {
 		return nil, errors.Wrapf(err, "error reading doc asset at [%s]", path)
 	}
-
 	return data, nil
 }
 

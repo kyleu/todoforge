@@ -25,3 +25,4 @@ The following modules were used to build this project:
 - [sqlite](./doc/module/sqlite.md)
 - [themecatalog](./doc/module/themecatalog.md)
 - [upgrade](./doc/module/upgrade.md)
+- [wasmserver](./doc/module/wasmserver.md)

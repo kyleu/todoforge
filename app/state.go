@@ -1,4 +1,4 @@
-// Content managed by Project Forge, see [projectforge.md] for details.
+// Package app - Content managed by Project Forge, see [projectforge.md] for details.
 package app
 
 import (
@@ -57,15 +57,13 @@ func NewState(debug bool, bi *BuildInfo, f filesystem.FileLoader, enableTelemetr
 	}
 
 	_ = telemetry.InitializeIfNeeded(enableTelemetry, bi.Version, logger)
-	ts := theme.NewService(f)
-	gqls := graphql.NewService()
 
 	return &State{
 		Debug:     debug,
 		BuildInfo: bi,
 		Files:     f,
-		GraphQL:   gqls,
-		Themes:    ts,
+		GraphQL:   graphql.NewService(),
+		Themes:    theme.NewService(f),
 		Started:   util.TimeCurrent(),
 	}, nil
 }

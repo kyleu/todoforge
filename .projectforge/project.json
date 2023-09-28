@@ -24,7 +24,8 @@
     "search",
     "sqlite",
     "themecatalog",
-    "upgrade"
+    "upgrade",
+    "wasmserver"
   ],
   "tags": [
     "kyleu"

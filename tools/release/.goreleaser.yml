@@ -35,6 +35,7 @@ checksum:
     - glob: "./build/dist/*_apk.zip"
     - glob: "./build/dist/*_framework.zip"
     - glob: "./build/dist/*_app.zip"
+    - glob: "./build/dist/*_wasm_html.zip"
     - glob: "./build/dist/*_notarized.zip"
     # $PF_SECTION_START(checksums)$
     # $PF_SECTION_END(checksums)$
@@ -82,6 +83,7 @@ release:
     - glob: "./build/dist/*_apk.zip"
     - glob: "./build/dist/*_framework.zip"
     - glob: "./build/dist/*_app.zip"
+    - glob: "./build/dist/*_wasm_html.zip"
     - glob: "./build/dist/*_notarized.zip"
     # $PF_SECTION_START(releasefiles)$
     # $PF_SECTION_END(releasefiles)$
@@ -116,6 +118,7 @@ universal_binaries:
   hooks:
     # This is a good place to put one-time use scripts
     post:
+      - "./bin/build/wasmrelease.sh {{ .Version }}"
       - "./bin/build/android.sh {{ .Version }}"
       - "./bin/build/ios.sh {{ .Version }}"
       - "./bin/build/desktop.release.sh {{ .Version }}"
@@ -200,6 +203,13 @@ builds:
       - "5"
       - "6"
       - "7"
+    mod_timestamp: "{{ .CommitTimestamp }}"
+
+  - id: "js"
+    goos:
+      - "js"
+    goarch:
+      - "wasm"
     mod_timestamp: "{{ .CommitTimestamp }}"
 
   - id: "dragonfly"
