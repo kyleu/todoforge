@@ -3,7 +3,7 @@ source = ["./build/dist/darwin_darwin_all/todoforge"]
 bundle_id = "dev.kyleu.todoforge"
 
 notarize {
-  path = "./build/dist/todoforge_0.0.1_darwin_all_desktop.dmg"
+  path = "./build/dist/todoforge_0.1.0_darwin_all_desktop.dmg"
   bundle_id = "dev.kyleu.todoforge"
 }
 
@@ -17,10 +17,10 @@ sign {
 }
 
 dmg {
-  output_path = "./build/dist/todoforge_0.0.1_darwin_all.dmg"
+  output_path = "./build/dist/todoforge_0.1.0_darwin_all.dmg"
   volume_name = "TODO Forge"
 }
 
 zip {
-  output_path = "./build/dist/todoforge_0.0.1_darwin_all_notarized.zip"
+  output_path = "./build/dist/todoforge_0.1.0_darwin_all_notarized.zip"
 }
