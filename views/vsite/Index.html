@@ -1,4 +1,4 @@
-<!-- Content managed by Project Forge, see [projectforge.md] for details. -->
+<!-- $PF_IGNORE$ -->
 {% import (
   "github.com/kyleu/todoforge/app"
   "github.com/kyleu/todoforge/app/controller/cutil"
@@ -12,7 +12,10 @@
 {% func (p *Index) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
     <h3>{%= components.SVGRefIcon(`app`, ps) %}{%s util.AppName %}</h3>
-    <p>This app is almost entirely generated via Project Forge</p>
+    <p>This app is almost entirely generated via Project Forge. It manages collections of todo items, and not much else.</p>
+    <p>
+      <a href="https://tododemo.kyleu.dev"><button>Demo</button></a> <em>(please be nice)</em>
+    </p>
     <p>
       <a href="/download"><button>Download</button></a>
       <a href="https://github.com/kyleu/todoforge"><button>Source Code</button></a>

@@ -13,5 +13,8 @@
 {% func (p *Home) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
     <h3>{%= components.SVGRefIcon(`app`, ps) %}{%s util.AppName %}</h3>
+    <p>This app is almost entirely generated via <a href="https://projectforge.dev" target="_blank" rel="noopener noreferrer">Project Forge</a>.</p>
+    <p>It manages collections of todo items, and not much else.</p>
+    <p>Take a look around, with or without JavaScript enabled, and check out Project Forge if you want your own app like this.</p>
   </div>
 {% endfunc %}

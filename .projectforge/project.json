@@ -39,7 +39,7 @@
     "homepage": "https://github.com/kyleu/todoforge",
     "sourcecode": "https://github.com/kyleu/todoforge",
     "summary": "Manages collections of todo items. Almost entirely generated using Project Forge",
-    "description": "This app is almost entirely generated via Project Forge",
+    "description": "This app is almost entirely generated via Project Forge. It manages collections of todo items, and not much else.",
     "bundle": "dev.kyleu.todoforge",
     "signingIdentity": "Developer ID Application: Kyle Unverferth (C6S478FYLD)",
     "notarizeEmail": "kyle@kyleu.com",

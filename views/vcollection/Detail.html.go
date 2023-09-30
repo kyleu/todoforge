@@ -120,7 +120,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vcollection/Detail.html:56
 	qw422016.N().S(` by [Collection ID]
         </label>
-        <div class="bd-animated"><div><div>
+        <div class="bd"><div><div>
 `)
 //line views/vcollection/Detail.html:59
 	if len(p.RelItemsByCollectionID) == 0 {

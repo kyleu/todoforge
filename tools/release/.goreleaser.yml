@@ -18,7 +18,7 @@ brews:
       email: "todoforge@kyleu.com"
     folder: Formula
     homepage: "https://github.com/kyleu/todoforge"
-    description: "This app is almost entirely generated via Project Forge"
+    description: "This app is almost entirely generated via Project Forge. It manages collections of todo items, and not much else."
     license: "MIT"
     skip_upload: "false"
     install: "bin.install \"todoforge\""
@@ -59,7 +59,7 @@ nfpms:
     vendor: "Kyle U"
     homepage: "https://github.com/kyleu/todoforge"
     maintainer: "Kyle U <todoforge@kyleu.com>"
-    description: "This app is almost entirely generated via Project Forge"
+    description: "This app is almost entirely generated via Project Forge. It manages collections of todo items, and not much else."
     license: "MIT"
     formats:
       - apk
@@ -98,7 +98,7 @@ snapcrafts:
   -
     publish: false
     summary: "Manages collections of todo items. Almost entirely generated using Project Forge"
-    description: "This app is almost entirely generated via Project Forge"
+    description: "This app is almost entirely generated via Project Forge. It manages collections of todo items, and not much else."
     grade: stable
     confinement: strict
     license: "MIT"

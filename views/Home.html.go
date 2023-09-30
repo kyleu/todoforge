@@ -43,33 +43,36 @@ func (p *Home) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 	qw422016.E().S(util.AppName)
 //line views/Home.html:15
 	qw422016.N().S(`</h3>
+    <p>This app is almost entirely generated via <a href="https://projectforge.dev" target="_blank" rel="noopener noreferrer">Project Forge</a>.</p>
+    <p>It manages collections of todo items, and not much else.</p>
+    <p>Take a look around, with or without JavaScript enabled, and check out Project Forge if you want your own app like this.</p>
   </div>
 `)
-//line views/Home.html:17
+//line views/Home.html:20
 }
 
-//line views/Home.html:17
+//line views/Home.html:20
 func (p *Home) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/Home.html:17
+//line views/Home.html:20
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/Home.html:17
+//line views/Home.html:20
 	p.StreamBody(qw422016, as, ps)
-//line views/Home.html:17
+//line views/Home.html:20
 	qt422016.ReleaseWriter(qw422016)
-//line views/Home.html:17
+//line views/Home.html:20
 }
 
-//line views/Home.html:17
+//line views/Home.html:20
 func (p *Home) Body(as *app.State, ps *cutil.PageState) string {
-//line views/Home.html:17
+//line views/Home.html:20
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/Home.html:17
+//line views/Home.html:20
 	p.WriteBody(qb422016, as, ps)
-//line views/Home.html:17
+//line views/Home.html:20
 	qs422016 := string(qb422016.B)
-//line views/Home.html:17
+//line views/Home.html:20
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/Home.html:17
+//line views/Home.html:20
 	return qs422016
-//line views/Home.html:17
+//line views/Home.html:20
 }
