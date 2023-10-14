@@ -97,7 +97,7 @@ self.addEventListener('message', (event) => {
 });
 
 function isLocal(url) {
-  if (url.toString().startsWith("https://github.com/kyleu/todoforge")) {
+  if (url.toString().startsWith("https://github.com/kyleu/todoforge/")) {
     return true;
   }
   for (const s of ["favicon.ico", "logo.svg", "todoforge.wasm", "server.js", "sw.js", "wasm_exec.js"]) {
