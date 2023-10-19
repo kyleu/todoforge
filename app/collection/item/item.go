@@ -10,10 +10,10 @@ import (
 )
 
 type Item struct {
-	ID           uuid.UUID `json:"id"`
-	CollectionID uuid.UUID `json:"collectionID"`
-	Name         string    `json:"name"`
-	Created      time.Time `json:"created"`
+	ID           uuid.UUID `json:"id,omitempty"`
+	CollectionID uuid.UUID `json:"collectionID,omitempty"`
+	Name         string    `json:"name,omitempty"`
+	Created      time.Time `json:"created,omitempty"`
 }
 
 func New(id uuid.UUID) *Item {

@@ -10,9 +10,9 @@ import (
 )
 
 type Collection struct {
-	ID      uuid.UUID `json:"id"`
-	Name    string    `json:"name"`
-	Created time.Time `json:"created"`
+	ID      uuid.UUID `json:"id,omitempty"`
+	Name    string    `json:"name,omitempty"`
+	Created time.Time `json:"created,omitempty"`
 }
 
 func New(id uuid.UUID) *Collection {
