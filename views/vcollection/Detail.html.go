@@ -111,7 +111,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.N().S(`
           `)
 //line views/vcollection/Detail.html:55
-	components.StreamSVGRefIcon(qw422016, `file`, ps)
+	components.StreamSVGRef(qw422016, `file`, 16, 16, `icon`, ps)
 //line views/vcollection/Detail.html:55
 	qw422016.N().S(`
           `)
