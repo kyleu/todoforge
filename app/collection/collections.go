@@ -16,21 +16,9 @@ func (c Collections) Get(id uuid.UUID) *Collection {
 	})
 }
 
-func (c Collections) GetByIDs(ids ...uuid.UUID) Collections {
-	return lo.Filter(c, func(xx *Collection, _ int) bool {
-		return lo.Contains(ids, xx.ID)
-	})
-}
-
-func (c Collections) GetByID(id uuid.UUID) Collections {
-	return lo.Filter(c, func(xx *Collection, _ int) bool {
-		return xx.ID == id
-	})
-}
-
 func (c Collections) IDs() []uuid.UUID {
-	return lo.Map(c, func(x *Collection, _ int) uuid.UUID {
-		return x.ID
+	return lo.Map(c, func(xx *Collection, _ int) uuid.UUID {
+		return xx.ID
 	})
 }
 
@@ -54,6 +42,18 @@ func (c Collections) TitleStrings(nilTitle string) []string {
 		ret = append(ret, x.TitleString())
 	})
 	return ret
+}
+
+func (c Collections) GetByID(id uuid.UUID) Collections {
+	return lo.Filter(c, func(xx *Collection, _ int) bool {
+		return xx.ID == id
+	})
+}
+
+func (c Collections) GetByIDs(ids ...uuid.UUID) Collections {
+	return lo.Filter(c, func(xx *Collection, _ int) bool {
+		return lo.Contains(ids, xx.ID)
+	})
 }
 
 func (c Collections) Clone() Collections {

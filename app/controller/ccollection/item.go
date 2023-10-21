@@ -37,7 +37,7 @@ func ItemList(rc *fasthttp.RequestCtx) {
 		collectionIDsByCollectionID := lo.Map(ret, func(x *item.Item, _ int) uuid.UUID {
 			return x.CollectionID
 		})
-		collectionsByCollectionID, err := as.Services.Collection.GetMultiple(ps.Context, nil, ps.Logger, collectionIDsByCollectionID...)
+		collectionsByCollectionID, err := as.Services.Collection.GetMultiple(ps.Context, nil, nil, ps.Logger, collectionIDsByCollectionID...)
 		if err != nil {
 			return "", err
 		}

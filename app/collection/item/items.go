@@ -16,33 +16,9 @@ func (i Items) Get(id uuid.UUID) *Item {
 	})
 }
 
-func (i Items) GetByIDs(ids ...uuid.UUID) Items {
-	return lo.Filter(i, func(xx *Item, _ int) bool {
-		return lo.Contains(ids, xx.ID)
-	})
-}
-
-func (i Items) GetByID(id uuid.UUID) Items {
-	return lo.Filter(i, func(xx *Item, _ int) bool {
-		return xx.ID == id
-	})
-}
-
-func (i Items) GetByCollectionIDs(collectionIDs ...uuid.UUID) Items {
-	return lo.Filter(i, func(xx *Item, _ int) bool {
-		return lo.Contains(collectionIDs, xx.CollectionID)
-	})
-}
-
-func (i Items) GetByCollectionID(collectionID uuid.UUID) Items {
-	return lo.Filter(i, func(xx *Item, _ int) bool {
-		return xx.CollectionID == collectionID
-	})
-}
-
 func (i Items) IDs() []uuid.UUID {
-	return lo.Map(i, func(x *Item, _ int) uuid.UUID {
-		return x.ID
+	return lo.Map(i, func(xx *Item, _ int) uuid.UUID {
+		return xx.ID
 	})
 }
 
@@ -66,6 +42,36 @@ func (i Items) TitleStrings(nilTitle string) []string {
 		ret = append(ret, x.TitleString())
 	})
 	return ret
+}
+
+func (i Items) GetByID(id uuid.UUID) Items {
+	return lo.Filter(i, func(xx *Item, _ int) bool {
+		return xx.ID == id
+	})
+}
+
+func (i Items) GetByIDs(ids ...uuid.UUID) Items {
+	return lo.Filter(i, func(xx *Item, _ int) bool {
+		return lo.Contains(ids, xx.ID)
+	})
+}
+
+func (i Items) CollectionIDs() []uuid.UUID {
+	return lo.Map(i, func(xx *Item, _ int) uuid.UUID {
+		return xx.CollectionID
+	})
+}
+
+func (i Items) GetByCollectionID(collectionID uuid.UUID) Items {
+	return lo.Filter(i, func(xx *Item, _ int) bool {
+		return xx.CollectionID == collectionID
+	})
+}
+
+func (i Items) GetByCollectionIDs(collectionIDs ...uuid.UUID) Items {
+	return lo.Filter(i, func(xx *Item, _ int) bool {
+		return lo.Contains(collectionIDs, xx.CollectionID)
+	})
 }
 
 func (i Items) Clone() Items {

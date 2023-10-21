@@ -50,13 +50,14 @@ func (s *Service) Get(ctx context.Context, tx *sqlx.Tx, id uuid.UUID, logger uti
 	return ret.ToItem(), nil
 }
 
-func (s *Service) GetMultiple(ctx context.Context, tx *sqlx.Tx, logger util.Logger, ids ...uuid.UUID) (Items, error) {
+func (s *Service) GetMultiple(ctx context.Context, tx *sqlx.Tx, params *filter.Params, logger util.Logger, ids ...uuid.UUID) (Items, error) {
 	if len(ids) == 0 {
 		return Items{}, nil
 	}
+	params = filters(params)
 	wc := database.SQLInClause("id", len(ids), 0, s.db.Placeholder())
+	q := database.SQLSelect(columnsString, tableQuoted, wc, params.OrderByString(), params.Limit, params.Offset, s.db.Placeholder())
 	ret := rows{}
-	q := database.SQLSelectSimple(columnsString, tableQuoted, s.db.Placeholder(), wc)
 	err := s.db.Select(ctx, &ret, q, tx, logger, lo.ToAnySlice(ids)...)
 	if err != nil {
 		return nil, errors.Wrapf(err, "unable to get Items for [%d] ids", len(ids))
@@ -72,6 +73,21 @@ func (s *Service) GetByCollectionID(ctx context.Context, tx *sqlx.Tx, collection
 	err := s.db.Select(ctx, &ret, q, tx, logger, collectionID)
 	if err != nil {
 		return nil, errors.Wrapf(err, "unable to get items by collectionID [%v]", collectionID)
+	}
+	return ret.ToItems(), nil
+}
+
+func (s *Service) GetByCollectionIDs(ctx context.Context, tx *sqlx.Tx, params *filter.Params, logger util.Logger, collectionIDs ...uuid.UUID) (Items, error) {
+	if len(collectionIDs) == 0 {
+		return Items{}, nil
+	}
+	params = filters(params)
+	wc := database.SQLInClause("collection_id", len(collectionIDs), 0, s.db.Placeholder())
+	q := database.SQLSelect(columnsString, tableQuoted, wc, params.OrderByString(), params.Limit, params.Offset, s.db.Placeholder())
+	ret := rows{}
+	err := s.db.Select(ctx, &ret, q, tx, logger, lo.ToAnySlice(collectionIDs)...)
+	if err != nil {
+		return nil, errors.Wrapf(err, "unable to get Items for [%d] collectionIDs", len(collectionIDs))
 	}
 	return ret.ToItems(), nil
 }
