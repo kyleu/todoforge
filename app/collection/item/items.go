@@ -17,8 +17,26 @@ func (i Items) Get(id uuid.UUID) *Item {
 }
 
 func (i Items) GetByIDs(ids ...uuid.UUID) Items {
-	return lo.Filter(i, func(x *Item, _ int) bool {
-		return lo.Contains(ids, x.ID)
+	return lo.Filter(i, func(xx *Item, _ int) bool {
+		return lo.Contains(ids, xx.ID)
+	})
+}
+
+func (i Items) GetByID(id uuid.UUID) Items {
+	return lo.Filter(i, func(xx *Item, _ int) bool {
+		return xx.ID == id
+	})
+}
+
+func (i Items) GetByCollectionIDs(collectionIDs ...uuid.UUID) Items {
+	return lo.Filter(i, func(xx *Item, _ int) bool {
+		return lo.Contains(collectionIDs, xx.CollectionID)
+	})
+}
+
+func (i Items) GetByCollectionID(collectionID uuid.UUID) Items {
+	return lo.Filter(i, func(xx *Item, _ int) bool {
+		return xx.CollectionID == collectionID
 	})
 }
 
