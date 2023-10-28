@@ -1,10 +1,4 @@
-scalar Time
-scalar UUID
-
-type Query {
-  hello: String!
-}
-
-type Mutation {
-  kill: String!
-}
+## include[scalars.graphql]
+## include[generated.graphql]
+## include[query.graphql]
+## include[mutation.graphql]

@@ -32,8 +32,7 @@ func ItemList(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		ps.Title = "Items"
-		ps.Data = ret
+		ps.SetTitleAndData("Items", ret)
 		collectionIDsByCollectionID := lo.Map(ret, func(x *item.Item, _ int) uuid.UUID {
 			return x.CollectionID
 		})
@@ -46,36 +45,40 @@ func ItemList(rc *fasthttp.RequestCtx) {
 	})
 }
 
+//nolint:lll
 func ItemDetail(rc *fasthttp.RequestCtx) {
 	controller.Act("item.detail", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret, err := itemFromPath(rc, as, ps)
 		if err != nil {
 			return "", err
 		}
-		ps.Title = ret.TitleString() + " (Item)"
-		ps.Data = ret
+		ps.SetTitleAndData(ret.TitleString()+" (Item)", ret)
 
 		collectionByCollectionID, _ := as.Services.Collection.Get(ps.Context, nil, ret.CollectionID, ps.Logger)
 
-		return controller.Render(rc, as, &vitem.Detail{Model: ret, CollectionByCollectionID: collectionByCollectionID}, ps, "collection", "item", ret.String())
+		return controller.Render(rc, as, &vitem.Detail{Model: ret, CollectionByCollectionID: collectionByCollectionID}, ps, "collection", "item", ret.TitleString()+"**file")
 	})
 }
 
 func ItemCreateForm(rc *fasthttp.RequestCtx) {
 	controller.Act("item.create.form", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &item.Item{}
-		ps.Title = "Create [Item]"
+		if string(rc.QueryArgs().Peek("prototype")) == "random" {
+			ret = item.Random()
+		}
+		ps.SetTitleAndData("Create [Item]", ret)
 		ps.Data = ret
 		return controller.Render(rc, as, &vitem.Edit{Model: ret, IsNew: true}, ps, "collection", "item", "Create")
 	})
 }
 
-func ItemCreateFormRandom(rc *fasthttp.RequestCtx) {
-	controller.Act("item.create.form.random", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret := item.Random()
-		ps.Title = "Create Random Item"
-		ps.Data = ret
-		return controller.Render(rc, as, &vitem.Edit{Model: ret, IsNew: true}, ps, "collection", "item", "Create")
+func ItemRandom(rc *fasthttp.RequestCtx) {
+	controller.Act("item.random", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := as.Services.Item.Random(ps.Context, nil, ps.Logger)
+		if err != nil {
+			return "", errors.Wrap(err, "unable to find random Item")
+		}
+		return ret.WebPath(), nil
 	})
 }
 
@@ -100,8 +103,7 @@ func ItemEditForm(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		ps.Title = "Edit " + ret.String()
-		ps.Data = ret
+		ps.SetTitleAndData("Edit "+ret.String(), ret)
 		return controller.Render(rc, as, &vitem.Edit{Model: ret}, ps, "collection", "item", ret.String())
 	})
 }

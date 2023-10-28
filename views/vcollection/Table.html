@@ -9,7 +9,7 @@
 
 {% func Table(models collection.Collections, params filter.ParamSet, as *app.State, ps *cutil.PageState) %}
   {%- code prms := params.Get("collection", nil, ps.Logger).Sanitize("collection") -%}
-  <table class="mt">
+  <table>
     <thead>
       <tr>
         {%= components.TableHeaderSimple("collection", "id", "ID", "UUID in format (00000000-0000-0000-0000-000000000000)", prms, ps.URI, ps) %}

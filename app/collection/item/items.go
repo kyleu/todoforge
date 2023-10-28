@@ -6,6 +6,8 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/samber/lo"
+
+	"github.com/kyleu/todoforge/app/util"
 )
 
 type Items []*Item
@@ -72,6 +74,13 @@ func (i Items) GetByCollectionIDs(collectionIDs ...uuid.UUID) Items {
 	return lo.Filter(i, func(xx *Item, _ int) bool {
 		return lo.Contains(collectionIDs, xx.CollectionID)
 	})
+}
+
+func (i Items) Random() *Item {
+	if len(i) == 0 {
+		return nil
+	}
+	return i[util.RandomInt(len(i))]
 }
 
 func (i Items) Clone() Items {

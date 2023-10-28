@@ -21,9 +21,9 @@ var (
 )
 
 type row struct {
-	ID      uuid.UUID `db:"id"`
-	Name    string    `db:"name"`
-	Created time.Time `db:"created"`
+	ID      uuid.UUID `db:"id" json:"id"`
+	Name    string    `db:"name" json:"name"`
+	Created time.Time `db:"created" json:"created"`
 }
 
 func (r *row) ToCollection() *Collection {

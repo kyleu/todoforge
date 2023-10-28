@@ -44,13 +44,13 @@ func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 //line views/vcollection/vitem/Edit.html:18
 	if p.IsNew {
 //line views/vcollection/vitem/Edit.html:18
-		qw422016.N().S(`    <div class="right"><a href="/collection/item/random"><button>Random</button></a></div>
+		qw422016.N().S(`    <div class="right"><a href="?prototype=random"><button>Random</button></a></div>
     <h3>`)
 //line views/vcollection/vitem/Edit.html:20
 		components.StreamSVGRefIcon(qw422016, `file`, ps)
 //line views/vcollection/vitem/Edit.html:20
 		qw422016.N().S(` New Item</h3>
-    <form action="/collection/item/new" class="mt" method="post">
+    <form action="/collection/item/_new" class="mt" method="post">
 `)
 //line views/vcollection/vitem/Edit.html:22
 	} else {

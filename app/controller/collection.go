@@ -29,8 +29,7 @@ func CollectionList(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		ps.Title = "Collections"
-		ps.Data = ret
+		ps.SetTitleAndData("Collections", ret)
 		page := &vcollection.List{Models: ret, Params: ps.Params, SearchQuery: q}
 		return Render(rc, as, page, ps, "collection")
 	})
@@ -42,8 +41,7 @@ func CollectionDetail(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		ps.Title = ret.TitleString() + " (Collection)"
-		ps.Data = ret
+		ps.SetTitleAndData(ret.TitleString()+" (Collection)", ret)
 
 		relItemsByCollectionIDPrms := ps.Params.Get("item", nil, ps.Logger).Sanitize("item")
 		relItemsByCollectionID, err := as.Services.Item.GetByCollectionID(ps.Context, nil, ret.ID, relItemsByCollectionIDPrms, ps.Logger)
@@ -55,25 +53,29 @@ func CollectionDetail(rc *fasthttp.RequestCtx) {
 			Params: ps.Params,
 
 			RelItemsByCollectionID: relItemsByCollectionID,
-		}, ps, "collection", ret.String())
+		}, ps, "collection", ret.TitleString()+"**archive")
 	})
 }
 
 func CollectionCreateForm(rc *fasthttp.RequestCtx) {
 	Act("collection.create.form", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &collection.Collection{}
-		ps.Title = "Create [Collection]"
+		if string(rc.QueryArgs().Peek("prototype")) == "random" {
+			ret = collection.Random()
+		}
+		ps.SetTitleAndData("Create [Collection]", ret)
 		ps.Data = ret
 		return Render(rc, as, &vcollection.Edit{Model: ret, IsNew: true}, ps, "collection", "Create")
 	})
 }
 
-func CollectionCreateFormRandom(rc *fasthttp.RequestCtx) {
-	Act("collection.create.form.random", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret := collection.Random()
-		ps.Title = "Create Random Collection"
-		ps.Data = ret
-		return Render(rc, as, &vcollection.Edit{Model: ret, IsNew: true}, ps, "collection", "Create")
+func CollectionRandom(rc *fasthttp.RequestCtx) {
+	Act("collection.random", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := as.Services.Collection.Random(ps.Context, nil, ps.Logger)
+		if err != nil {
+			return "", errors.Wrap(err, "unable to find random Collection")
+		}
+		return ret.WebPath(), nil
 	})
 }
 
@@ -98,8 +100,7 @@ func CollectionEditForm(rc *fasthttp.RequestCtx) {
 		if err != nil {
 			return "", err
 		}
-		ps.Title = "Edit " + ret.String()
-		ps.Data = ret
+		ps.SetTitleAndData("Edit "+ret.String(), ret)
 		return Render(rc, as, &vcollection.Edit{Model: ret}, ps, "collection", ret.String())
 	})
 }

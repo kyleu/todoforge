@@ -38,7 +38,7 @@ func StreamTable(qw422016 *qt422016.Writer, models item.Items, collectionsByColl
 	prms := params.Get("item", nil, ps.Logger).Sanitize("item")
 
 //line views/vcollection/vitem/Table.html:12
-	qw422016.N().S(`  <table class="mt">
+	qw422016.N().S(`  <table>
     <thead>
       <tr>
         `)
