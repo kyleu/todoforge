@@ -60,7 +60,7 @@ func CollectionDetail(rc *fasthttp.RequestCtx) {
 func CollectionCreateForm(rc *fasthttp.RequestCtx) {
 	Act("collection.create.form", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &collection.Collection{}
-		if string(rc.QueryArgs().Peek("prototype")) == "random" {
+		if string(rc.QueryArgs().Peek("prototype")) == util.KeyRandom {
 			ret = collection.Random()
 		}
 		ps.SetTitleAndData("Create [Collection]", ret)

@@ -63,7 +63,7 @@ func ItemDetail(rc *fasthttp.RequestCtx) {
 func ItemCreateForm(rc *fasthttp.RequestCtx) {
 	controller.Act("item.create.form", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &item.Item{}
-		if string(rc.QueryArgs().Peek("prototype")) == "random" {
+		if string(rc.QueryArgs().Peek("prototype")) == util.KeyRandom {
 			ret = item.Random()
 		}
 		ps.SetTitleAndData("Create [Item]", ret)
