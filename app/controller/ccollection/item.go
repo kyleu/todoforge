@@ -65,6 +65,10 @@ func ItemCreateForm(rc *fasthttp.RequestCtx) {
 		ret := &item.Item{}
 		if string(rc.QueryArgs().Peek("prototype")) == util.KeyRandom {
 			ret = item.Random()
+			randomCollection, err := as.Services.Collection.Random(ps.Context, nil, ps.Logger)
+			if err == nil && randomCollection != nil {
+				ret.CollectionID = randomCollection.ID
+			}
 		}
 		ps.SetTitleAndData("Create [Item]", ret)
 		ps.Data = ret
