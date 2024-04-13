@@ -4,7 +4,7 @@
   "icon": "todo",
   "version": "0.1.6",
   "package": "github.com/kyleu/todoforge",
-  "port": 11000,
+  "port": 12000,
   "modules": [
     "android",
     "audit",

@@ -5,7 +5,7 @@ const (
 	AppKey     = "todoforge"
 	AppName    = "TODO Forge"
 	AppSummary = "Manages collections of todo items. Almost entirely generated using Project Forge"
-	AppPort    = 11000
+	AppPort    = 12000
 	AppContact = "Kyle U <todoforge@kyleu.com>"
 	AppURL     = "https://github.com/kyleu/todoforge"
 	AppSource  = "https://github.com/kyleu/todoforge"

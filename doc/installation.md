@@ -14,8 +14,8 @@ Download the .deb, .rpm or .apk packages from the [release page](https://github.
 
 ## Running with Docker
 ```shell
-docker run -p 11000:11000 ghcr.io/kyleu/todoforge:latest
-docker run -p 11000:11000 ghcr.io/kyleu/todoforge:latest-debug
+docker run -p 12000:12000 ghcr.io/kyleu/todoforge:latest
+docker run -p 12000:12000 ghcr.io/kyleu/todoforge:latest-debug
 ```
 
 ## Built from source

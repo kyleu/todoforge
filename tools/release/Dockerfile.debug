@@ -18,7 +18,7 @@ RUN go install github.com/go-delve/delve/cmd/dlv@latest
 SHELL ["/bin/bash", "-c"]
 
 # main http port
-EXPOSE 11000
+EXPOSE 12000
 # marketing port
 EXPOSE 11001
 
