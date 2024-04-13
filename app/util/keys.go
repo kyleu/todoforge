@@ -11,10 +11,17 @@ const (
 	AppSource  = "https://github.com/kyleu/todoforge"
 	AppLegal   = `Built by <a href="mailto:todoforge@kyleu.com">Kyle U</a>, all rights reserved`
 
-	BoolTrue   = "true"
 	KeyError   = "error"
 	KeyRandom  = "random"
 	KeyUnknown = "unknown"
+
+	KeyCSV  = "csv"
+	KeyJSON = "json"
+	KeyXML  = "xml"
+	KeyYAML = "yaml"
+
+	ExtJSON     = ".json"
+	ExtMarkdown = ".md"
 
 	// $PF_SECTION_START(keys)$
 	// $PF_SECTION_END(keys)$.

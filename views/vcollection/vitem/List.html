@@ -6,6 +6,7 @@
   "github.com/kyleu/todoforge/app/controller/cutil"
   "github.com/kyleu/todoforge/app/lib/filter"
   "github.com/kyleu/todoforge/views/components"
+  "github.com/kyleu/todoforge/views/components/edit"
   "github.com/kyleu/todoforge/views/layout"
 ) %}
 
@@ -19,7 +20,7 @@
 
 {% func (p *List) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
-    <div class="right">{%= components.SearchForm("", "q", "Search items", p.SearchQuery, ps) %}</div>
+    <div class="right">{%= edit.SearchForm("", "q", "Search Items", p.SearchQuery, ps) %}</div>
     <div class="right mrs large-buttons">
       {%- if len(p.Models) > 0 -%}<a href="/collection/item/_random"><button>Random</button></a>{%- endif -%}
       <a href="/collection/item/_new"><button>New</button></a>
@@ -33,7 +34,7 @@
     {%- if len(p.Models) == 0 -%}
     <div class="mt"><em>No items available</em></div>
     {%- else -%}
-    <div class="overflow clear mt">
+    <div class="mt">
       {%= Table(p.Models, p.CollectionsByCollectionID, p.Params, as, ps) %}
     </div>
     {%- endif -%}

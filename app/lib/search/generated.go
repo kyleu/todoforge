@@ -16,7 +16,7 @@ import (
 
 func generatedSearch() []Provider {
 	collectionFunc := func(ctx context.Context, params *Params, as *app.State, page *cutil.PageState, logger util.Logger) (result.Results, error) {
-		prm := params.PS.Get("collection", nil, logger).Sanitize("collection").WithLimit(5)
+		prm := params.PS.Sanitized("collection", logger).WithLimit(5)
 		models, err := as.Services.Collection.Search(ctx, params.Q, nil, prm, logger)
 		if err != nil {
 			return nil, err
@@ -26,7 +26,7 @@ func generatedSearch() []Provider {
 		}), nil
 	}
 	itemFunc := func(ctx context.Context, params *Params, as *app.State, page *cutil.PageState, logger util.Logger) (result.Results, error) {
-		prm := params.PS.Get("item", nil, logger).Sanitize("item").WithLimit(5)
+		prm := params.PS.Sanitized("item", logger).WithLimit(5)
 		models, err := as.Services.Item.Search(ctx, params.Q, nil, prm, logger)
 		if err != nil {
 			return nil, err

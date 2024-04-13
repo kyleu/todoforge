@@ -2,69 +2,54 @@
 package routes
 
 import (
-	"github.com/fasthttp/router"
-	"github.com/valyala/fasthttp"
+	"net/http"
+
+	"github.com/gorilla/mux"
 
 	"github.com/kyleu/todoforge/app"
 	"github.com/kyleu/todoforge/app/controller"
 	"github.com/kyleu/todoforge/app/controller/clib"
 	"github.com/kyleu/todoforge/app/controller/cutil"
-	"github.com/kyleu/todoforge/app/lib/telemetry/httpmetrics"
 	"github.com/kyleu/todoforge/app/util"
 )
 
+func makeRoute(x *mux.Router, method string, path string, f http.HandlerFunc) {
+	cutil.AddRoute(method, path)
+	x.HandleFunc(path, f).Methods(method)
+}
+
 //nolint:revive
-func AppRoutes(as *app.State, logger util.Logger) fasthttp.RequestHandler {
-	r := router.New()
+func AppRoutes(as *app.State, logger util.Logger) (http.Handler, error) {
+	r := mux.NewRouter()
 
-	r.GET("/", controller.Home)
-	r.GET("/healthcheck", clib.Healthcheck)
-	r.GET("/about", clib.About)
+	makeRoute(r, http.MethodGet, "/", controller.Home)
+	makeRoute(r, http.MethodGet, "/healthcheck", clib.Healthcheck)
+	makeRoute(r, http.MethodGet, "/about", clib.About)
 
-	r.GET(cutil.DefaultProfilePath, clib.Profile)
-	r.POST(cutil.DefaultProfilePath, clib.ProfileSave)
-	r.GET(cutil.DefaultSearchPath, clib.Search)
+	makeRoute(r, http.MethodGet, cutil.DefaultProfilePath, clib.Profile)
+	makeRoute(r, http.MethodPost, cutil.DefaultProfilePath, clib.ProfileSave)
+	makeRoute(r, http.MethodGet, cutil.DefaultSearchPath, clib.Search)
+
 	themeRoutes(r)
 	generatedRoutes(r)
 
 	// $PF_SECTION_START(routes)$
 	// $PF_SECTION_END(routes)$
 
-	r.GET("/docs", clib.Docs)
-	r.GET("/docs/{path:*}", clib.Docs)
+	makeRoute(r, http.MethodGet, "/docs", clib.Docs)
+	makeRoute(r, http.MethodGet, "/docs/{path:.*}", clib.Docs)
 
-	r.GET("/graphql", controller.GraphQLIndex)
-	r.GET("/graphql/{key}", controller.GraphQLDetail)
-	r.POST("/graphql/{key}", controller.GraphQLRun)
+	makeRoute(r, http.MethodGet, "/graphql", clib.GraphQLIndex)
+	makeRoute(r, http.MethodGet, "/graphql/{key}", clib.GraphQLDetail)
+	makeRoute(r, http.MethodPost, "/graphql/{key}", clib.GraphQLRun)
 
-	r.GET("/admin", clib.Admin)
-	r.GET("/admin/audit", clib.AuditList)
-	r.GET("/admin/audit/random", clib.AuditCreateFormRandom)
-	r.GET("/admin/audit/new", clib.AuditCreateForm)
-	r.POST("/admin/audit/new", clib.AuditCreate)
-	r.GET("/admin/audit/record/{id}", clib.RecordDetail)
-	r.GET("/admin/audit/{id}", clib.AuditDetail)
-	r.GET("/admin/audit/{id}/edit", clib.AuditEditForm)
-	r.POST("/admin/audit/{id}/edit", clib.AuditEdit)
-	r.GET("/admin/audit/{id}/delete", clib.AuditDelete)
-	r.GET("/admin/database", clib.DatabaseList)
-	r.GET("/admin/database/{key}", clib.DatabaseDetail)
-	r.GET("/admin/database/{key}/{act}", clib.DatabaseAction)
-	r.GET("/admin/database/{key}/tables/{schema}/{table}", clib.DatabaseTableView)
-	r.POST("/admin/database/{key}/sql", clib.DatabaseSQLRun)
-	r.GET("/admin/{path:*}", clib.Admin)
-	r.POST("/admin/{path:*}", clib.Admin)
+	adminRoutes(r)
 
-	r.GET("/favicon.ico", clib.Favicon)
-	r.GET("/robots.txt", clib.RobotsTxt)
-	r.GET("/assets/{_:*}", clib.Static)
+	makeRoute(r, http.MethodGet, "/favicon.ico", clib.Favicon)
+	makeRoute(r, http.MethodGet, "/robots.txt", clib.RobotsTxt)
+	makeRoute(r, http.MethodGet, "/assets/{path:.*}", clib.Static)
 
-	r.OPTIONS("/", controller.Options)
-	r.OPTIONS("/{_:*}", controller.Options)
-	r.NotFound = controller.NotFound
+	makeRoute(r, http.MethodOptions, "/", controller.Options)
 
-	clib.AppRoutesList = r.List()
-
-	p := httpmetrics.NewMetrics(util.AppKey, logger)
-	return fasthttp.CompressHandlerLevel(p.WrapHandler(r, true), fasthttp.CompressBestSpeed)
+	return cutil.WireRouter(r, controller.NotFoundAction, logger)
 }

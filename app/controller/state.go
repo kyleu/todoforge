@@ -2,9 +2,9 @@
 package controller
 
 import (
+	"context"
 	"fmt"
-
-	"github.com/valyala/fasthttp"
+	"net/http"
 
 	"github.com/kyleu/todoforge/app"
 	"github.com/kyleu/todoforge/app/controller/cutil"
@@ -19,44 +19,44 @@ var (
 	_currentSiteRootLogger util.Logger
 )
 
-func SetAppState(a *app.State, logger util.Logger) {
+func SetAppState(a *app.State, logger util.Logger) error {
 	_currentAppState = a
 	_currentAppRootLogger = logger
-	initApp(a, logger)
+	return initApp(context.Background(), a, logger)
 }
 
-func SetSiteState(a *app.State, logger util.Logger) {
+func SetSiteState(a *app.State, logger util.Logger) error {
 	_currentSiteState = a
 	_currentSiteRootLogger = logger
-	initSite(a, logger)
+	return initSite(context.Background(), a, logger)
 }
 
-func handleError(key string, as *app.State, ps *cutil.PageState, rc *fasthttp.RequestCtx, err error) (string, error) {
-	rc.SetStatusCode(fasthttp.StatusInternalServerError)
+func handleError(key string, as *app.State, ps *cutil.PageState, w http.ResponseWriter, r *http.Request, err error) (string, error) {
+	w.WriteHeader(http.StatusInternalServerError)
 
 	ps.LogError("error running action [%s]: %+v", key, err)
 
 	if len(ps.Breadcrumbs) == 0 {
-		bc := util.StringSplitAndTrim(string(rc.URI().Path()), "/")
+		bc := util.StringSplitAndTrim(r.URL.Path, "/")
 		bc = append(bc, "Error")
 		ps.Breadcrumbs = bc
 	}
 
-	if cleanErr := ps.Clean(rc, as); cleanErr != nil {
+	if cleanErr := ps.Clean(r, as); cleanErr != nil {
 		ps.Logger.Error(cleanErr)
 		msg := fmt.Sprintf("error while cleaning request: %+v", cleanErr)
 		ps.Logger.Error(msg)
-		_, _ = rc.WriteString(msg)
+		_, _ = w.Write([]byte(msg))
 		return "", cleanErr
 	}
 
-	e := util.GetErrorDetail(err)
+	e := util.GetErrorDetail(err, ps.Admin)
 	ps.Data = e
-	redir, renderErr := Render(rc, as, &verror.Error{Err: e}, ps)
+	redir, renderErr := Render(w, r, as, &verror.Error{Err: e}, ps)
 	if renderErr != nil {
 		msg := fmt.Sprintf("error while running error handler: %+v", renderErr)
 		ps.Logger.Error(msg)
-		_, _ = rc.WriteString(msg)
+		_, _ = w.Write([]byte(msg))
 		return "", renderErr
 	}
 	return redir, nil

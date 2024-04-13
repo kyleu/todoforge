@@ -25,14 +25,13 @@ func (t *Theme) CSS(indent int) string {
 		return t.css
 	}
 	sb := &strings.Builder{}
-	sb.WriteString(t.Light.CSS(":root", 0))
-	sb.WriteString(t.Light.CSS(".mode-light", indent))
+	sb.WriteString(t.Light.CSS(".mode-light", 0))
 	sb.WriteString(t.Dark.CSS(".mode-dark", indent))
-	addLine(sb, "", indent)
+	addLine(sb, "@media (prefers-color-scheme: light) {", indent)
+	sb.WriteString(t.Light.CSS(":root", indent+1))
+	addLine(sb, "}", indent)
 	addLine(sb, "@media (prefers-color-scheme: dark) {", indent)
 	sb.WriteString(t.Dark.CSS(":root", indent+1))
-	sb.WriteString(t.Light.CSS(".mode-light", indent+1))
-	sb.WriteString(t.Dark.CSS(".mode-dark", indent+1))
 	addLine(sb, "}", indent)
 	t.css = sb.String()
 	return t.css
@@ -46,10 +45,14 @@ func (t *Theme) Equals(x *Theme) bool {
 	return t.Light.Equals(x.Light) && t.Dark.Equals(x.Dark)
 }
 
+func (t *Theme) Matches(x *Theme) bool {
+	return t.Key == x.Key
+}
+
 func (t *Theme) ToGo() string {
-	var ret []string
+	ret := &util.StringSlice{}
 	add := func(ind int, s string, args ...any) {
-		ret = append(ret, util.StringRepeat("\t", ind+1)+fmt.Sprintf(s, args...))
+		ret.Push(util.StringRepeat("\t", ind+1) + fmt.Sprintf(s, args...))
 	}
 	addColors := func(c *Colors) {
 		add(2, "Border: %q, LinkDecoration: %q,", c.Border, c.LinkDecoration)
@@ -70,17 +73,17 @@ func (t *Theme) ToGo() string {
 	addColors(t.Dark)
 	add(1, "},")
 	add(0, "},")
-	return strings.Join(ret, util.StringDefaultLinebreak)
+	return ret.Join(util.StringDefaultLinebreak)
 }
 
 type Themes []*Theme
 
 func (t Themes) Sort() Themes {
 	slices.SortFunc(t, func(l *Theme, r *Theme) int {
-		if l.Key == Default.Key {
+		if l.Matches(Default) {
 			return 0
 		}
-		if r.Key == Default.Key {
+		if r.Matches(Default) {
 			return 0
 		}
 		return cmp.Compare(strings.ToLower(l.Key), strings.ToLower(r.Key))

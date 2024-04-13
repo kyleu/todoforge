@@ -2,40 +2,70 @@
 package cutil
 
 import (
-	"encoding/xml"
+	"net/http"
 
 	"github.com/pkg/errors"
-	"github.com/samber/lo"
-	"github.com/valyala/fasthttp"
 	"gopkg.in/yaml.v2"
 
 	"github.com/kyleu/todoforge/app/util"
 )
 
-func ParseForm(rc *fasthttp.RequestCtx) (util.ValueMap, error) {
-	ct := GetContentType(rc)
+func ParseForm(r *http.Request, b []byte) (util.ValueMap, error) {
+	ct := GetContentType(r)
 	if IsContentTypeJSON(ct) {
-		return parseJSONForm(rc)
+		return parseJSONForm(b)
 	}
 	if IsContentTypeXML(ct) {
-		return parseXMLForm(rc)
+		return parseXMLForm(b)
 	}
 	if IsContentTypeYAML(ct) {
-		return parseYAMLForm(rc)
+		return parseYAMLForm(b)
 	}
-	return parseHTTPForm(rc)
+	ret, err := parseJSONForm(b)
+	if err != nil {
+		ret, err = parseHTTPForm(r)
+	}
+	return ret, err
 }
 
-func ParseFormAsChanges(rc *fasthttp.RequestCtx) (util.ValueMap, error) {
-	ret, err := ParseForm(rc)
+func ParseFormAsMaps(r *http.Request, rBody []byte) ([]util.ValueMap, error) {
+	frm, err := ParseForm(r, rBody)
+	if err != nil {
+		return nil, errors.Wrap(err, "unable to parse form")
+	}
+	switch {
+	case frm.HasKey("resultArray"):
+		return frm.GetMapArray("resultArray", false)
+	case frm.HasKey("json"):
+		var ret []util.ValueMap
+		js := frm.GetStringOpt("json")
+		m, err := util.FromJSONMap([]byte(js))
+		if err == nil {
+			ret = append(ret, m)
+		} else {
+			err = util.FromJSON([]byte(js), &ret)
+			if err != nil {
+				return nil, errors.Wrapf(err, "unable to parse JSON from [%s]", js)
+			}
+		}
+		return ret, nil
+	case len(frm) == 0:
+		return nil, errors.Errorf("unable to parse request body as events (no fields)")
+	default:
+		return []util.ValueMap{frm}, nil
+	}
+}
+
+func ParseFormAsChanges(r *http.Request, b []byte) (util.ValueMap, error) {
+	ret, err := ParseForm(r, b)
 	if err != nil {
 		return nil, err
 	}
 	return ret.AsChanges()
 }
 
-func parseJSONForm(rc *fasthttp.RequestCtx) (util.ValueMap, error) {
-	ret, err := util.FromJSONInterface(rc.Request.Body())
+func parseJSONForm(b []byte) (util.ValueMap, error) {
+	ret, err := util.FromJSONAny(b)
 	if err != nil {
 		return nil, errors.Wrap(err, "can't parse JSON body")
 	}
@@ -47,39 +77,36 @@ func parseJSONForm(rc *fasthttp.RequestCtx) (util.ValueMap, error) {
 	}
 }
 
-func parseXMLForm(rc *fasthttp.RequestCtx) (util.ValueMap, error) {
-	ret := util.ValueMap{}
-	err := xml.Unmarshal(rc.Request.Body(), &ret)
+func parseXMLForm(b []byte) (util.ValueMap, error) {
+	ret, err := util.FromXMLMap(b)
 	if err != nil {
 		return nil, errors.Wrap(err, "can't parse XML body")
 	}
 	return ret, nil
 }
 
-func parseYAMLForm(rc *fasthttp.RequestCtx) (util.ValueMap, error) {
+func parseYAMLForm(b []byte) (util.ValueMap, error) {
 	ret := util.ValueMap{}
-	err := yaml.Unmarshal(rc.Request.Body(), &ret)
+	err := yaml.Unmarshal(b, &ret)
 	if err != nil {
 		return nil, errors.Wrap(err, "can't parse YAML body")
 	}
 	return ret, nil
 }
 
-func parseHTTPForm(rc *fasthttp.RequestCtx) (util.ValueMap, error) {
-	f := rc.PostArgs()
-	ret := make(util.ValueMap, f.Len())
-	f.VisitAll(func(key []byte, value []byte) {
-		k := string(key)
-		xs := f.PeekMulti(k)
-		v := lo.Map(xs, func(x []byte, _ int) string {
-			return string(x)
-		})
+func parseHTTPForm(r *http.Request) (util.ValueMap, error) {
+	err := r.ParseForm()
+	if err != nil {
+		return nil, err
+	}
+	ret := make(util.ValueMap, len(r.PostForm))
+	for k, v := range r.PostForm {
 		if len(v) == 1 {
 			ret[k] = v[0]
 		} else {
 			ret[k] = v
 		}
-	})
+	}
 	return ret, nil
 }
 

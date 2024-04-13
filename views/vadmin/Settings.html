@@ -14,7 +14,7 @@
 {% func (p *Settings) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
     {%- if util.AppSource != "" -%}
-    <div class="right"><a target="_blank" rel="noopener noreferrer" href="{%s util.AppSource %}"><button>Github</button></a></div>
+    <div class="right"><a target="_blank" rel="noopener noreferrer" href="{%s util.AppSource %}"><button>GitHub</button></a></div>
     {%- endif -%}
     <h3 title="github:{%s as.BuildInfo.Commit %}">{%= components.SVGRefIcon(`cog`, ps) %}{%s util.AppName %} {%s as.BuildInfo.String() %}</h3>
     {%- if util.AppLegal != "" -%}
@@ -31,12 +31,6 @@
     <ul class="mt">
       <li><a href="/admin/audit">{%= components.SVGRefIcon(`cog`, ps) %}View audit logs</a></li>
     </ul>
-  </div>
-
-  <div class="card">
-    <h3>{%= components.SVGRefIcon(`database`, ps) %}Database Management</h3>
-    {%= settingsLink("/admin/database", "database", "Database Management", "Tools for exploring and manipulating your database", ps) %}
-    {%= settingsLink("/admin/migrations", "archive", "Migrations", "Shows the full content of all database SQL migrations", ps) %}
   </div>
 
   <div class="card">
@@ -63,6 +57,11 @@
     {%= settingsLink("/admin/cpu/start", "cog", "Start CPU Profile", "Profiles the CPU using <em>./tmp/cpu.pprof</em>, use script to view", ps) %}
     {%= settingsLink("/admin/cpu/stop", "cog", "Stop CPU Profile", "Stops the active CPU profile", ps) %}
     <div class="clear"></div>
+  </div>
+  <div class="card">
+    <h3>{%= components.SVGRefIcon(`database`, ps) %}Database Management</h3>
+    {%= settingsLink("/admin/database", "database", "Database Management", "Tools for exploring and manipulating your database", ps) %}
+    {%= settingsLink("/admin/migrations", "archive", "Migrations", "Shows the full content of all database SQL migrations", ps) %}
   </div>
 {% endfunc %}
 

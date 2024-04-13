@@ -2,33 +2,29 @@
 package routes
 
 import (
-	"github.com/fasthttp/router"
-	"github.com/valyala/fasthttp"
+	"net/http"
+
+	"github.com/gorilla/mux"
 
 	"github.com/kyleu/todoforge/app/controller"
 	"github.com/kyleu/todoforge/app/controller/clib"
 	"github.com/kyleu/todoforge/app/controller/cutil"
-	"github.com/kyleu/todoforge/app/lib/telemetry/httpmetrics"
 	"github.com/kyleu/todoforge/app/util"
 )
 
-func SiteRoutes(logger util.Logger) fasthttp.RequestHandler {
-	r := router.New()
+func SiteRoutes(logger util.Logger) (http.Handler, error) {
+	r := mux.NewRouter()
 
-	r.GET("/", controller.Site)
+	makeRoute(r, http.MethodGet, cutil.DefaultProfilePath, clib.ProfileSite)
+	makeRoute(r, http.MethodPost, cutil.DefaultProfilePath, clib.ProfileSave)
 
-	r.GET(cutil.DefaultProfilePath, clib.ProfileSite)
-	r.POST(cutil.DefaultProfilePath, clib.ProfileSave)
+	makeRoute(r, http.MethodGet, "/favicon.ico", clib.Favicon)
+	makeRoute(r, http.MethodGet, "/assets/{path:.*}", clib.Static)
 
-	r.GET("/favicon.ico", clib.Favicon)
-	r.GET("/assets/{_:*}", clib.Static)
+	makeRoute(r, http.MethodGet, "/", controller.Site)
+	makeRoute(r, http.MethodGet, "/{path:.*}", controller.Site)
 
-	r.GET("/{path:*}", controller.Site)
+	makeRoute(r, http.MethodOptions, "/", controller.Options)
 
-	r.OPTIONS("/", controller.Options)
-	r.OPTIONS("/{_:*}", controller.Options)
-	r.NotFound = controller.NotFound
-
-	p := httpmetrics.NewMetrics("marketing_site", logger)
-	return fasthttp.CompressHandlerLevel(p.WrapHandler(r, false), fasthttp.CompressBestSpeed)
+	return cutil.WireRouter(r, controller.NotFoundAction, logger)
 }

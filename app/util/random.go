@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"math/big"
+	"net/url"
 	"time"
 
 	"github.com/samber/lo"
@@ -62,6 +63,20 @@ func RandomDate() time.Time {
 	to := TimeCurrent().AddDate(2, 0, 0).Unix()
 	rnd := RandomInt(int(to - from))
 	return time.Unix(from+int64(rnd), 0)
+}
+
+func RandomURL() *url.URL {
+	u, _ := url.Parse("https://" + RandomString(6) + ".com/" + RandomString(6) + "/" + RandomString(8) + "." + RandomString(3))
+	return u
+}
+
+func RandomElements[T any](l []T, x int) []T {
+	if len(l) <= x {
+		return lo.Shuffle(l)
+	}
+	return lo.Map(lo.Range(x), func(_ int, _ int) T {
+		return l[RandomInt(len(l))]
+	})
 }
 
 func RandomDiffs(size int) Diffs {

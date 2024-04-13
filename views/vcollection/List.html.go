@@ -13,23 +13,24 @@ import (
 	"github.com/kyleu/todoforge/app/controller/cutil"
 	"github.com/kyleu/todoforge/app/lib/filter"
 	"github.com/kyleu/todoforge/views/components"
+	"github.com/kyleu/todoforge/views/components/edit"
 	"github.com/kyleu/todoforge/views/layout"
 )
 
-//line views/vcollection/List.html:11
+//line views/vcollection/List.html:12
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line views/vcollection/List.html:11
+//line views/vcollection/List.html:12
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line views/vcollection/List.html:11
+//line views/vcollection/List.html:12
 type List struct {
 	layout.Basic
 	Models      collection.Collections
@@ -37,94 +38,94 @@ type List struct {
 	SearchQuery string
 }
 
-//line views/vcollection/List.html:18
+//line views/vcollection/List.html:19
 func (p *List) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vcollection/List.html:18
+//line views/vcollection/List.html:19
 	qw422016.N().S(`
   <div class="card">
     <div class="right">`)
-//line views/vcollection/List.html:20
-	components.StreamSearchForm(qw422016, "", "q", "Search collections", p.SearchQuery, ps)
-//line views/vcollection/List.html:20
+//line views/vcollection/List.html:21
+	edit.StreamSearchForm(qw422016, "", "q", "Search Collections", p.SearchQuery, ps)
+//line views/vcollection/List.html:21
 	qw422016.N().S(`</div>
     <div class="right mrs large-buttons">
 `)
-//line views/vcollection/List.html:22
+//line views/vcollection/List.html:23
 	if len(p.Models) > 0 {
-//line views/vcollection/List.html:22
+//line views/vcollection/List.html:23
 		qw422016.N().S(`<a href="/collection/_random"><button>Random</button></a>`)
-//line views/vcollection/List.html:22
+//line views/vcollection/List.html:23
 	}
-//line views/vcollection/List.html:22
+//line views/vcollection/List.html:23
 	qw422016.N().S(`      <a href="/collection/_new"><button>New</button></a>
     </div>
     <h3>`)
-//line views/vcollection/List.html:25
+//line views/vcollection/List.html:26
 	components.StreamSVGRefIcon(qw422016, `archive`, ps)
-//line views/vcollection/List.html:25
+//line views/vcollection/List.html:26
 	qw422016.E().S(ps.Title)
-//line views/vcollection/List.html:25
+//line views/vcollection/List.html:26
 	qw422016.N().S(`</h3>
     <div class="clear"></div>
 `)
-//line views/vcollection/List.html:27
+//line views/vcollection/List.html:28
 	if p.SearchQuery != "" {
-//line views/vcollection/List.html:27
+//line views/vcollection/List.html:28
 		qw422016.N().S(`    <hr />
     <em>Search results for [`)
-//line views/vcollection/List.html:29
+//line views/vcollection/List.html:30
 		qw422016.E().S(p.SearchQuery)
-//line views/vcollection/List.html:29
+//line views/vcollection/List.html:30
 		qw422016.N().S(`]</em> (<a href="?">clear</a>)
 `)
-//line views/vcollection/List.html:30
+//line views/vcollection/List.html:31
 	}
-//line views/vcollection/List.html:31
+//line views/vcollection/List.html:32
 	if len(p.Models) == 0 {
-//line views/vcollection/List.html:31
+//line views/vcollection/List.html:32
 		qw422016.N().S(`    <div class="mt"><em>No collections available</em></div>
 `)
-//line views/vcollection/List.html:33
+//line views/vcollection/List.html:34
 	} else {
-//line views/vcollection/List.html:33
-		qw422016.N().S(`    <div class="overflow clear mt">
+//line views/vcollection/List.html:34
+		qw422016.N().S(`    <div class="mt">
       `)
-//line views/vcollection/List.html:35
+//line views/vcollection/List.html:36
 		StreamTable(qw422016, p.Models, p.Params, as, ps)
-//line views/vcollection/List.html:35
+//line views/vcollection/List.html:36
 		qw422016.N().S(`
     </div>
 `)
-//line views/vcollection/List.html:37
+//line views/vcollection/List.html:38
 	}
-//line views/vcollection/List.html:37
+//line views/vcollection/List.html:38
 	qw422016.N().S(`  </div>
 `)
-//line views/vcollection/List.html:39
+//line views/vcollection/List.html:40
 }
 
-//line views/vcollection/List.html:39
+//line views/vcollection/List.html:40
 func (p *List) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vcollection/List.html:39
+//line views/vcollection/List.html:40
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vcollection/List.html:39
+//line views/vcollection/List.html:40
 	p.StreamBody(qw422016, as, ps)
-//line views/vcollection/List.html:39
+//line views/vcollection/List.html:40
 	qt422016.ReleaseWriter(qw422016)
-//line views/vcollection/List.html:39
+//line views/vcollection/List.html:40
 }
 
-//line views/vcollection/List.html:39
+//line views/vcollection/List.html:40
 func (p *List) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vcollection/List.html:39
+//line views/vcollection/List.html:40
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vcollection/List.html:39
+//line views/vcollection/List.html:40
 	p.WriteBody(qb422016, as, ps)
-//line views/vcollection/List.html:39
+//line views/vcollection/List.html:40
 	qs422016 := string(qb422016.B)
-//line views/vcollection/List.html:39
+//line views/vcollection/List.html:40
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vcollection/List.html:39
+//line views/vcollection/List.html:40
 	return qs422016
-//line views/vcollection/List.html:39
+//line views/vcollection/List.html:40
 }

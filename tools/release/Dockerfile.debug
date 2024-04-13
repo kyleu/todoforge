@@ -20,7 +20,7 @@ SHELL ["/bin/bash", "-c"]
 # main http port
 EXPOSE 12000
 # marketing port
-EXPOSE 11001
+EXPOSE 12001
 
 WORKDIR /
 

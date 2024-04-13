@@ -76,6 +76,12 @@ func (i Items) GetByCollectionIDs(collectionIDs ...uuid.UUID) Items {
 	})
 }
 
+func (i Items) ToCSV() ([]string, [][]string) {
+	return FieldDescs.Keys(), lo.Map(i, func(x *Item, _ int) []string {
+		return x.Strings()
+	})
+}
+
 func (i Items) Random() *Item {
 	if len(i) == 0 {
 		return nil

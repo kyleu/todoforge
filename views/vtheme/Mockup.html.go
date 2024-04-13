@@ -86,7 +86,7 @@ func StreamMockupColors(qw422016 *qt422016.Writer, navTitle string, mode string,
 
 	cls := "mockup"
 	if mode != "" {
-		cls += " only-" + mode
+		cls += " only-" + mode + "-theme"
 	}
 	if pointer {
 		cls += " pointer"

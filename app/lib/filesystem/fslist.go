@@ -3,6 +3,7 @@ package filesystem
 
 import (
 	"io/fs"
+	"os"
 	"path/filepath"
 	"strings"
 
@@ -34,7 +35,7 @@ func (f *FileSystem) ListFiles(path string, ign []string, logger util.Logger) Fi
 }
 
 func (f *FileSystem) ListJSON(path string, ign []string, trimExtension bool, logger util.Logger) []string {
-	return f.ListExtension(path, "json", ign, trimExtension, logger)
+	return f.ListExtension(path, util.KeyJSON, ign, trimExtension, logger)
 }
 
 func (f *FileSystem) ListExtension(path string, ext string, ign []string, trimExtension bool, logger util.Logger) []string {
@@ -61,21 +62,24 @@ func (f *FileSystem) ListDirectories(path string, ign []string, logger util.Logg
 func (f *FileSystem) ListFilesRecursive(path string, ign []string, _ util.Logger) ([]string, error) {
 	ignore := buildIgnore(ign)
 	p := f.getPath(path)
-	var ret []string
+	ret := &util.StringSlice{}
 	err := filepath.Walk(p, func(fp string, info fs.FileInfo, err error) error {
+		if err != nil {
+			return err
+		}
 		m := strings.TrimPrefix(strings.TrimPrefix(fp, p+"\\"), p+"/")
 		if checkIgnore(ignore, m) {
 			return nil
 		}
-		if info != nil && (!info.IsDir()) && (strings.Contains(fp, "/") || strings.Contains(fp, "\\")) {
-			ret = append(ret, m)
+		if info != nil && (!info.IsDir()) && (info.Mode()&os.ModeSymlink != os.ModeSymlink) && (strings.Contains(fp, "/") || strings.Contains(fp, "\\")) {
+			ret.Push(m)
 		}
 		return nil
 	})
 	if err != nil {
 		return nil, err
 	}
-	return util.ArraySorted(ret), nil
+	return util.ArraySorted(ret.Slice), nil
 }
 
 func (f *FileSystem) Walk(path string, ign []string, fn func(fp string, info *FileInfo, err error) error) error {

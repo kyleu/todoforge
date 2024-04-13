@@ -5,6 +5,7 @@
   "github.com/kyleu/todoforge/app/lib/database"
   "github.com/kyleu/todoforge/app/util"
   "github.com/kyleu/todoforge/views/components"
+  "github.com/kyleu/todoforge/views/components/view"
   "github.com/kyleu/todoforge/views/layout"
 ) %}
 
@@ -53,7 +54,7 @@
           <input id="accordion-extra" type="checkbox" hidden="hidden" />
           <label for="accordion-extra">{%= components.ExpandCollapse(3, ps) %} Query Plan</label>
           <div class="bd"><div><div>
-            {%= components.DisplayMaps(s.Extra, nil, true, ps) %}
+            {%= view.MapArray(true, s.Extra...) %}
           </div></div></div>
         </li>
         {%- endif -%}

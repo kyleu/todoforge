@@ -18,6 +18,7 @@ const keyCustom = "custom"
 var (
 	RecentLogs []*zapcore.Entry
 	recentMU   = &sync.Mutex{}
+	listenerMU = &sync.Mutex{}
 )
 
 func InitLogging(debug bool) (util.Logger, error) {
@@ -25,7 +26,7 @@ func InitLogging(debug bool) (util.Logger, error) {
 	var err error
 	lf := util.GetEnv("logging_format")
 	switch {
-	case strings.EqualFold(lf, "json"):
+	case strings.EqualFold(lf, util.KeyJSON):
 		logger, err = initJSONLogging(getLevel(zap.InfoLevel))
 	case debug:
 		logger, err = initDevLogging(getLevel(zap.DebugLevel))

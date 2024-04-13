@@ -1,0 +1,25 @@
+<!-- Content managed by Project Forge, see [projectforge.md] for details. -->
+{% import "github.com/kyleu/todoforge/views/components" %}
+
+{% func Color(key string, id string, color string, placeholder ...string) %}{% stripspace %}
+  {% if id == "" %}
+    <input type="color" name="{%s key %}" value="{%s color %}" {%= components.PlaceholderFor(placeholder) %}/>
+  {% else %}
+    <input id="{%s id %}" type="color" name="{%s key %}" value="{%s color %}" {%= components.PlaceholderFor(placeholder) %}/>
+  {% endif %}
+{% endstripspace %}{% endfunc %}
+
+{% func ColorTable(key string, id string, title string, color string, indent int, help ...string) %}{% stripspace %}
+  <tr>
+    {%= components.Indent(true, indent + 1) %}
+    <th class="shrink"><label for="{%s id %}">{%s title %}</label></th>
+    {%= components.Indent(true, indent + 1) %}
+    <td>
+      {%= components.Indent(true, indent + 2) %}
+      {%= Color(key, id, color, help...) %}
+      {%= components.Indent(true, indent + 1) %}
+    </td>
+  {%= components.Indent(true, indent) %}
+  </tr>
+{% endstripspace %}{% endfunc %}
+

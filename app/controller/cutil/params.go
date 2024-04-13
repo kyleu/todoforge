@@ -2,38 +2,35 @@
 package cutil
 
 import (
+	"net/http"
 	"strconv"
 	"strings"
-
-	"github.com/valyala/fasthttp"
 
 	"github.com/kyleu/todoforge/app/lib/filter"
 )
 
-func ParamSetFromRequest(rc *fasthttp.RequestCtx) filter.ParamSet {
+func ParamSetFromRequest(r *http.Request) filter.ParamSet {
 	ret := filter.ParamSet{}
-	args := rc.URI().QueryArgs()
-	args.VisitAll(func(key []byte, value []byte) {
-		qk := string(key)
-		if strings.Contains(qk, ".") {
-			ret = apply(ret, qk, string(args.Peek(qk)))
+	for k, v := range r.URL.Query() {
+		if strings.Contains(k, ".") {
+			ret = apply(ret, k, strings.Join(v, ","))
 		}
-	})
+	}
 	return ret
 }
 
 func apply(ps filter.ParamSet, qk string, qv string) filter.ParamSet {
 	switch {
-	case strings.HasSuffix(qk, ".o"):
-		curr := getCurr(ps, strings.TrimSuffix(qk, ".o"))
+	case strings.HasSuffix(qk, filter.SuffixOrder):
+		curr := getCurr(ps, strings.TrimSuffix(qk, filter.SuffixOrder))
 		asc := true
-		if strings.HasSuffix(qv, ".d") {
+		if strings.HasSuffix(qv, filter.SuffixDescending) {
 			asc = false
 			qv = qv[0 : len(qv)-2]
 		}
 		curr.Orderings = append(curr.Orderings, &filter.Ordering{Column: qv, Asc: asc})
-	case strings.HasSuffix(qk, ".l"):
-		curr := getCurr(ps, strings.TrimSuffix(qk, ".l"))
+	case strings.HasSuffix(qk, filter.SuffixLimit):
+		curr := getCurr(ps, strings.TrimSuffix(qk, filter.SuffixLimit))
 		li, err := strconv.ParseInt(qv, 10, 32)
 		if err == nil {
 			curr.Limit = int(li)
@@ -42,8 +39,8 @@ func apply(ps filter.ParamSet, qk string, qv string) filter.ParamSet {
 				curr.Limit = maxCount
 			}
 		}
-	case strings.HasSuffix(qk, ".x"):
-		curr := getCurr(ps, strings.TrimSuffix(qk, ".x"))
+	case strings.HasSuffix(qk, filter.SuffixOffset):
+		curr := getCurr(ps, strings.TrimSuffix(qk, filter.SuffixOffset))
 		xi, err := strconv.ParseInt(qv, 10, 32)
 		if err == nil {
 			curr.Offset = int(xi)

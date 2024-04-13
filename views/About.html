@@ -4,6 +4,7 @@
   "github.com/kyleu/todoforge/app/controller/cutil"
   "github.com/kyleu/todoforge/app/util"
   "github.com/kyleu/todoforge/views/components"
+  "github.com/kyleu/todoforge/views/components/view"
   "github.com/kyleu/todoforge/views/layout"
 ) %}
 
@@ -12,7 +13,7 @@
 {% func (p *About) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
     <h3>{%= components.SVGRefIcon(`app`, ps) %}{%s util.AppName %}</h3>
-    <em>v{%s as.BuildInfo.Version %}, started {%s util.TimeRelative(&as.Started) %}</em>
+    <em>v{%s as.BuildInfo.Version %}, started {%= view.TimestampRelative(&as.Started, false) %}</em>
   </div>
   <div class="card">
     <h3>About</h3>
@@ -25,15 +26,15 @@
 {% endfunc %}
 
 {% func SourceCode() %}
-<div class="card">
-  <h3>Source Code</h3>
-  <p>The project is available on <a href="https://github.com/kyleu/todoforge" target="_blank" rel="noopener noreferrer">GitHub</a></p>
-</div>
+  <div class="card">
+    <h3>Source Code</h3>
+    <p>The project is available on <a href="https://github.com/kyleu/todoforge" target="_blank" rel="noopener noreferrer">GitHub</a></p>
+  </div>
 {% endfunc %}
 
 {% func Feedback() %}
-<div class="card">
-  <h3>Feedback</h3>
-  <p>For now, email <a href="mailto:todoforge@kyleu.com">Kyle U</a></p>
-</div>
+  <div class="card">
+    <h3>Feedback</h3>
+    <p>For now, email <a href="mailto:todoforge@kyleu.com">Kyle U</a></p>
+  </div>
 {% endfunc %}

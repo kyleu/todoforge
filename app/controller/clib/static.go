@@ -2,42 +2,44 @@
 package clib
 
 import (
+	"net/http"
 	"strings"
-
-	"github.com/valyala/fasthttp"
 
 	"github.com/kyleu/todoforge/app/controller/cutil"
 	"github.com/kyleu/todoforge/assets"
 )
 
-func Favicon(rc *fasthttp.RequestCtx) {
-	data, contentType, err := assets.EmbedAsset("favicon.ico")
-	assetResponse(rc, data, contentType, err)
+func Favicon(w http.ResponseWriter, _ *http.Request) {
+	e, err := assets.Embed("favicon.ico")
+	assetResponse(w, e, err)
 }
 
-func RobotsTxt(rc *fasthttp.RequestCtx) {
-	data, contentType, err := assets.EmbedAsset("robots.txt")
-	assetResponse(rc, data, contentType, err)
+func RobotsTxt(w http.ResponseWriter, _ *http.Request) {
+	e, err := assets.Embed("robots.txt")
+	assetResponse(w, e, err)
 }
 
-func Static(rc *fasthttp.RequestCtx) {
-	p := strings.TrimPrefix(string(rc.Request.URI().Path()), "/assets")
+func Static(w http.ResponseWriter, r *http.Request) {
+	p := strings.TrimPrefix(r.URL.Path, "/assets")
 	p = strings.TrimPrefix(p, "/")
 	if strings.Contains(p, "../") {
-		rc.Error("invalid path", fasthttp.StatusNotFound)
+		w.WriteHeader(http.StatusNotFound)
+		_, _ = w.Write([]byte("invalid path"))
 	} else {
-		data, contentType, e := assets.EmbedAsset(p)
-		assetResponse(rc, data, contentType, e)
+		e, err := assets.Embed(p)
+		assetResponse(w, e, err)
 	}
 }
 
-func assetResponse(rc *fasthttp.RequestCtx, data []byte, contentType string, err error) {
+func assetResponse(w http.ResponseWriter, e *assets.Entry, err error) {
 	if err == nil {
-		rc.Response.Header.SetContentType(contentType)
-		rc.SetStatusCode(fasthttp.StatusOK)
-		cutil.WriteCORS(rc)
-		_, _ = rc.Write(data)
+		w.Header().Set(cutil.HeaderContentType, e.Mime)
+		w.Header().Set(cutil.HeaderCacheControl, "public, max-age=3600")
+		w.WriteHeader(http.StatusOK)
+		cutil.WriteCORS(w)
+		_, _ = w.Write(e.Bytes)
 	} else {
-		rc.Error(err.Error(), fasthttp.StatusNotFound)
+		w.WriteHeader(http.StatusNotFound)
+		_, _ = w.Write([]byte(err.Error()))
 	}
 }

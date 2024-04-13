@@ -26,7 +26,7 @@ func docMenu(logger util.Logger) *menu.Item {
 
 func docMenuCreate(logger util.Logger) *menu.Item {
 	var paths []string
-	err := fs.WalkDir(doc.FS, ".", func(path string, d fs.DirEntry, err error) error {
+	err := fs.WalkDir(doc.FS, ".", func(path string, _ fs.DirEntry, err error) error {
 		paths = append(paths, path)
 		return err
 	})
@@ -37,14 +37,14 @@ func docMenuCreate(logger util.Logger) *menu.Item {
 
 	ret := &menu.Item{Key: "docs", Title: "Documentation", Icon: "folder"}
 	for _, p := range paths {
-		if p == "." || !strings.HasSuffix(p, ".md") {
+		if p == "." || strings.HasPrefix(p, "module/") || !strings.HasSuffix(p, util.ExtMarkdown) {
 			continue
 		}
 		split := util.StringSplitAndTrim(p, "/")
-		p = strings.TrimSuffix(p, ".md")
+		p = strings.TrimSuffix(p, util.ExtMarkdown)
 		mi := ret
 		lo.ForEach(split, func(comp string, idx int) {
-			name := strings.TrimSuffix(comp, ".md")
+			name := strings.TrimSuffix(comp, util.ExtMarkdown)
 			addFolder := func() {
 				i := &menu.Item{Key: name, Title: util.StringToCamel(name), Icon: "folder"}
 				mi.Children = append(mi.Children, i)
@@ -54,7 +54,7 @@ func docMenuCreate(logger util.Logger) *menu.Item {
 				mi = i
 			}
 			if idx == len(split)-1 {
-				if strings.HasSuffix(comp, ".md") {
+				if strings.HasSuffix(comp, util.ExtMarkdown) {
 					mi.Children = append(mi.Children, addChild(p, name))
 				} else {
 					addFolder()
@@ -78,7 +78,7 @@ func docMenuCreate(logger util.Logger) *menu.Item {
 func addChild(p string, name string) *menu.Item {
 	r := "/" + path.Join("docs", p)
 	title := util.StringToCamel(name)
-	b, err := doc.FS.ReadFile(p + ".md")
+	b, err := doc.FS.ReadFile(p + util.ExtMarkdown)
 	if err != nil {
 		panic(err)
 	}

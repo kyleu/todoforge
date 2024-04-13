@@ -5,12 +5,18 @@
 
 set -eo pipefail
 dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-cd $dir/../..
+cd "$dir/../.."
 
 TGT=$1
 [ "$TGT" ] || TGT="v0.0.0"
 
-docker build -f tools/desktop/Dockerfile.desktop -t todoforge .
+if command -v retry &> /dev/null
+then
+  retry -t 4 -- docker build -f tools/desktop/Dockerfile.desktop -t todoforge .
+else
+  docker build -f tools/desktop/Dockerfile.desktop -t todoforge .
+fi
+
 
 rm -rf tmp/release
 mkdir -p tmp/release

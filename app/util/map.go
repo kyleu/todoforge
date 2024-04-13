@@ -82,6 +82,18 @@ func (m ValueMap) Clone() ValueMap {
 	return ret
 }
 
+func (m ValueMap) WithoutKeys(keys ...string) ValueMap {
+	ret := m.Clone()
+	for _, key := range keys {
+		delete(ret, key)
+	}
+	return ret
+}
+
+func (m ValueMap) String() string {
+	return ToJSONCompact(m)
+}
+
 func (m ValueMap) ToStringMap() map[string]string {
 	return lo.MapValues(m, func(_ any, key string) string {
 		return m.GetStringOpt(key)
@@ -119,22 +131,20 @@ func (m ValueMap) AsChanges() (ValueMap, error) {
 	}), nil
 }
 
-func (m ValueMap) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
-	tokens := []xml.Token{start}
-	for key, value := range m {
-		t := xml.StartElement{Name: xml.Name{Space: "", Local: key}}
-		x, err := xml.Marshal(value)
-		if err != nil {
-			return err
-		}
-		tokens = append(tokens, t, xml.CharData(x), xml.EndElement{Name: t.Name})
+func (m ValueMap) MarshalXML(e *xml.Encoder, _ xml.StartElement) error {
+	err := e.EncodeToken(xml.StartElement{Name: xml.Name{Local: "map"}})
+	if err != nil {
+		return err
 	}
-	tokens = append(tokens, xml.EndElement{Name: start.Name})
-	for _, t := range tokens {
-		err := e.EncodeToken(t)
+	for key, value := range m {
+		err = e.EncodeElement(value, xml.StartElement{Name: xml.Name{Local: key}})
 		if err != nil {
 			return err
 		}
+	}
+	err = e.EncodeToken(xml.EndElement{Name: xml.Name{Local: "map"}})
+	if err != nil {
+		return err
 	}
 	return e.Flush()
 }

@@ -5,33 +5,12 @@ import (
 	"cmp"
 	"fmt"
 	"slices"
+	"strconv"
 	"strings"
 
+	"github.com/pkg/errors"
 	"github.com/samber/lo"
 )
-
-type KeyValInt struct {
-	Key   string `json:"key" db:"key"`
-	Count int    `json:"val" db:"val"`
-}
-
-func (k KeyValInt) String() string {
-	return fmt.Sprintf("%s: %d", k.Key, k.Count)
-}
-
-type KeyValInts []*KeyValInt
-
-func (k KeyValInts) ToMap() map[string]int {
-	return lo.Associate(k, func(x *KeyValInt) (string, int) {
-		return x.Key, x.Count
-	})
-}
-
-func (k KeyValInts) String() string {
-	return strings.Join(lo.Map(k, func(x *KeyValInt, _ int) string {
-		return x.String()
-	}), ", ")
-}
 
 type KeyVal[T any] struct {
 	Key string `json:"key" db:"key"`
@@ -72,6 +51,10 @@ func (k *KeyTypeDesc) Array(key string) []string {
 	return []string{strings.ReplaceAll("`"+k.Key+"`", "{key}", key), k.Type, strings.ReplaceAll(k.Description, "{key}", key)}
 }
 
+func (k *KeyTypeDesc) Matches(x *KeyTypeDesc) bool {
+	return k.Key == x.Key
+}
+
 type KeyTypeDescs []*KeyTypeDesc
 
 func (k KeyTypeDescs) Sort() KeyTypeDescs {
@@ -94,4 +77,31 @@ type FieldDesc struct {
 	Type        string `json:"type,omitempty"`
 }
 
+func (d FieldDesc) Parse(q string) (any, error) {
+	switch d.Type {
+	case "bool":
+		return strconv.ParseBool(q)
+	case "int":
+		return strconv.ParseInt(q, 10, 64)
+	case "string":
+		return q, nil
+	case "time":
+		return TimeFromString(q)
+	default:
+		return nil, errors.Errorf("unable to parse [%s] value from string [%s]", d.Type, q)
+	}
+}
+
 type FieldDescs []*FieldDesc
+
+func (d FieldDescs) Get(key string) *FieldDesc {
+	return lo.FindOrElse(d, nil, func(x *FieldDesc) bool {
+		return x.Key == key
+	})
+}
+
+func (d FieldDescs) Keys() []string {
+	return lo.Map(d, func(x *FieldDesc, _ int) string {
+		return x.Key
+	})
+}

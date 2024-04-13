@@ -3,8 +3,8 @@ package util
 
 import (
 	"fmt"
-	"hash/fnv"
 	"path/filepath"
+	"reflect"
 	"runtime"
 	"strings"
 
@@ -57,7 +57,7 @@ func StringSplitLastOnly(s string, sep byte, cutc bool) string {
 func StringSplitAndTrim(s string, delim string) []string {
 	return lo.FilterMap(strings.Split(s, delim), func(x string, _ int) (string, bool) {
 		x = strings.TrimSpace(x)
-		return x, len(x) > 0
+		return x, x != ""
 	})
 }
 
@@ -90,7 +90,7 @@ func StringSplitLines(s string) []string {
 func StringSplitLinesIndented(s string, indent int, indentFirstLine bool, includeEmptyLines bool) []string {
 	ind := StringRepeat("  ", indent)
 	lines := StringSplitLines(s)
-	ret := make([]string, 0, len(lines))
+	ret := NewStringSlice(make([]string, 0, len(lines)))
 	for idx, line := range lines {
 		if (!includeEmptyLines) && strings.TrimSpace(line) == "" {
 			continue
@@ -98,9 +98,9 @@ func StringSplitLinesIndented(s string, indent int, indentFirstLine bool, includ
 		if indentFirstLine || idx > 0 {
 			line = ind + line
 		}
-		ret = append(ret, line)
+		ret.Push(line)
 	}
-	return ret
+	return ret.Slice
 }
 
 func StringPad(s string, size int) string {
@@ -174,12 +174,6 @@ func StringReplaceBetween(s string, l string, r string, replacement string) (str
 	return s[:lio] + replacement + s[ri:], nil
 }
 
-func StringHash(s string) uint32 {
-	h := fnv.New32a()
-	_, _ = h.Write([]byte(s))
-	return h.Sum32()
-}
-
 func CountryFlag(code string) string {
 	if len(code) != 2 {
 		return fmt.Sprintf("INVALID: %q", code)
@@ -193,4 +187,11 @@ var filenameReplacer = strings.NewReplacer("/", "-", "\\", "-", "?", "-", "%", "
 
 func Filename(s string) string {
 	return filenameReplacer.Replace(s)
+}
+
+func StringNullable(s fmt.Stringer) string {
+	if s == nil || reflect.ValueOf(s).IsNil() {
+		return ""
+	}
+	return s.String()
 }

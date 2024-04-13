@@ -9,7 +9,6 @@ var (
 	menuItemCollectionItem = &menu.Item{Key: "item", Title: "Items", Description: "TODO item", Icon: "file", Route: "/collection/item"}
 )
 
-//nolint:unused
 func generatedMenu() menu.Items {
 	return menu.Items{
 		menuItemCollection,

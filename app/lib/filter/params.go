@@ -3,10 +3,10 @@ package filter
 
 import (
 	"fmt"
+	"net/url"
 	"strings"
 
 	"github.com/samber/lo"
-	"github.com/valyala/fasthttp"
 
 	"github.com/kyleu/todoforge/app/util"
 )
@@ -14,6 +14,11 @@ import (
 const (
 	PageSize = 100
 	MaxRows  = 10000
+
+	SuffixOrder      = ".o"
+	SuffixLimit      = ".l"
+	SuffixOffset     = ".x"
+	SuffixDescending = ".d"
 )
 
 var AllowedColumns = map[string][]string{}
@@ -169,7 +174,7 @@ func (p *Params) String() string {
 	return fmt.Sprintf("%s(%s): %s", p.Key, ol, strings.Join(ord, " / "))
 }
 
-func (p *Params) ToQueryString(u *fasthttp.URI) string {
+func (p *Params) ToQueryString(u *url.URL) string {
 	if p == nil {
 		return ""
 	}
@@ -178,28 +183,30 @@ func (p *Params) ToQueryString(u *fasthttp.URI) string {
 		return ""
 	}
 
-	ret := &fasthttp.Args{}
-	u.QueryArgs().CopyTo(ret)
+	ret := url.Values{}
+	for k, v := range u.Query() {
+		ret[k] = v
+	}
 
-	ret.Del(p.Key + ".o")
-	ret.Del(p.Key + ".l")
-	ret.Del(p.Key + ".x")
+	ret.Del(p.Key + SuffixOrder)
+	ret.Del(p.Key + SuffixLimit)
+	ret.Del(p.Key + SuffixOffset)
 
 	lo.ForEach(p.Orderings, func(o *Ordering, _ int) {
 		s := o.Column
 		if !o.Asc {
-			s += ".d"
+			s += SuffixDescending
 		}
-		ret.Add(p.Key+".o", s)
+		ret.Add(p.Key+SuffixOrder, s)
 	})
 
 	if p.Limit != 0 && p.Limit != 1000 {
-		ret.Add(p.Key+".l", fmt.Sprint(p.Limit))
+		ret.Add(p.Key+SuffixLimit, fmt.Sprint(p.Limit))
 	}
 
 	if p.Offset > 0 {
-		ret.Add(p.Key+".x", fmt.Sprint(p.Offset))
+		ret.Add(p.Key+SuffixOffset, fmt.Sprint(p.Offset))
 	}
 
-	return string(ret.QueryString())
+	return ret.Encode()
 }

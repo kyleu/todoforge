@@ -4,6 +4,7 @@ package log
 import (
 	"fmt"
 	"strings"
+	"time"
 
 	"github.com/pkg/errors"
 	"github.com/samber/lo"
@@ -13,12 +14,18 @@ import (
 	"github.com/kyleu/todoforge/app/util"
 )
 
-const timeFormat = "15:04:05.000000"
+const (
+	timeFormat = "15:04:05.000000"
+	logIndent  = "  "
+)
+
+type ListenerFunc func(level string, occurred time.Time, loggerName string, message string, caller util.ValueMap, stack string, fields util.ValueMap)
 
 type customEncoder struct {
 	zapcore.Encoder
-	colored bool
-	pool    buffer.Pool
+	colored   bool
+	pool      buffer.Pool
+	listeners []ListenerFunc
 }
 
 func newEncoder(cfg zapcore.EncoderConfig, colored bool) *customEncoder {
@@ -37,6 +44,9 @@ func (e *customEncoder) EncodeEntry(entry zapcore.Entry, fields []zapcore.Field)
 		if len(RecentLogs) > 50 {
 			RecentLogs = RecentLogs[1:]
 		}
+	}()
+	go func() {
+		e.sendToListeners(entry, fields)
 	}()
 	b, err := e.Encoder.EncodeEntry(entry, fields)
 	if err != nil {
@@ -82,19 +92,19 @@ func (e *customEncoder) EncodeEntry(entry zapcore.Entry, fields []zapcore.Field)
 			if strings.Contains(ml, util.AppKey) {
 				ml = Green.Add(ml)
 			}
-			addLine("  " + Cyan.Add(ml))
+			addLine(logIndent + Cyan.Add(ml))
 		} else {
-			addLine("  " + ml)
+			addLine(logIndent + ml)
 		}
 	})
 	if len(data) > 0 {
-		addLine("  " + util.ToJSONCompact(data))
+		addLine(logIndent + util.ToJSONCompact(data))
 	}
 	caller := entry.Caller.String()
 	if entry.Caller.Function != "" {
 		caller += " (" + entry.Caller.Function + ")"
 	}
-	addLine("  " + caller)
+	addLine(logIndent + caller)
 
 	if entry.Stack != "" {
 		st := util.StringSplitLines(entry.Stack)
@@ -102,8 +112,24 @@ func (e *customEncoder) EncodeEntry(entry zapcore.Entry, fields []zapcore.Field)
 			if strings.Contains(stl, util.AppKey) {
 				stl = Green.Add(stl)
 			}
-			addLine("  " + stl)
+			addLine(logIndent + stl)
 		})
 	}
 	return ret, nil
+}
+
+func (e *customEncoder) sendToListeners(entry zapcore.Entry, fields []zapcore.Field) {
+	listenerMU.Lock()
+	defer listenerMU.Unlock()
+	fieldMap := make(util.ValueMap, len(fields))
+	for _, x := range fields {
+		fieldMap[x.Key] = x.Interface
+	}
+	caller := util.ValueMap{"file": entry.Caller.File, "line": entry.Caller.Line, "function": entry.Caller.Function}
+	for _, listener := range e.listeners {
+		l := listener
+		go func() {
+			l(entry.Level.String(), entry.Time, entry.LoggerName, entry.Message, caller, entry.Stack, fieldMap)
+		}()
+	}
 }

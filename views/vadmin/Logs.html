@@ -1,11 +1,11 @@
 <!-- Content managed by Project Forge, see [projectforge.md] for details. -->
-<!-- Content managed by Project Forge, see [projectforge.md] for details. -->
 {% import (
   "go.uber.org/zap/zapcore"
 
   "github.com/kyleu/todoforge/app"
   "github.com/kyleu/todoforge/app/controller/cutil"
   "github.com/kyleu/todoforge/app/util"
+  "github.com/kyleu/todoforge/views/components"
   "github.com/kyleu/todoforge/views/layout"
 ) %}
 
@@ -16,7 +16,7 @@
 
 {% func (p *Logs) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
-    <h3>Recent Logs</h3>
+    <h3>{%= components.SVGRefIcon(`filter`, ps) %}Recent Logs</h3>
     {%= logTable(p.Logs) %}
   </div>
 {% endfunc %}

@@ -7,6 +7,7 @@
   "github.com/kyleu/todoforge/app/lib/filter"
   "github.com/kyleu/todoforge/app/util"
   "github.com/kyleu/todoforge/views/components"
+  "github.com/kyleu/todoforge/views/components/view"
   "github.com/kyleu/todoforge/views/layout"
   "github.com/kyleu/todoforge/views/vcollection/vitem"
 ) %}
@@ -26,22 +27,24 @@
     </div>
     <h3>{%= components.SVGRefIcon(`archive`, ps) %} {%s p.Model.TitleString() %}</h3>
     <div><a href="/collection"><em>Collection</em></a></div>
-    <table class="mt">
-      <tbody>
-        <tr>
-          <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">ID</th>
-          <td>{%= components.DisplayUUID(&p.Model.ID) %}</td>
-        </tr>
-        <tr>
-          <th class="shrink" title="String text">Name</th>
-          <td><strong>{%s p.Model.Name %}</strong></td>
-        </tr>
-        <tr>
-          <th class="shrink" title="Date and time, in almost any format">Created</th>
-          <td>{%= components.DisplayTimestamp(&p.Model.Created) %}</td>
-        </tr>
-      </tbody>
-    </table>
+    <div class="mt overflow full-width">
+      <table>
+        <tbody>
+          <tr>
+            <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">ID</th>
+            <td>{%= view.UUID(&p.Model.ID) %}</td>
+          </tr>
+          <tr>
+            <th class="shrink" title="String text">Name</th>
+            <td><strong>{%= view.String(p.Model.Name) %}</strong></td>
+          </tr>
+          <tr>
+            <th class="shrink" title="Date and time, in almost any format">Created</th>
+            <td>{%= view.Timestamp(&p.Model.Created) %}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
   {%- comment %}$PF_SECTION_START(extra)${% endcomment -%}
   {%- comment %}$PF_SECTION_END(extra)${% endcomment -%}

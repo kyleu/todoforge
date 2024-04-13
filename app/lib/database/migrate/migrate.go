@@ -3,23 +3,48 @@ package migrate
 
 import (
 	"context"
+	"slices"
+	"strings"
 
 	"github.com/jmoiron/sqlx"
 	"github.com/pkg/errors"
+	"github.com/samber/lo"
 
 	"github.com/kyleu/todoforge/app/lib/database"
 	"github.com/kyleu/todoforge/app/lib/telemetry"
 	"github.com/kyleu/todoforge/app/util"
 )
 
-func Migrate(ctx context.Context, s *database.Service, logger util.Logger) error {
+func Migrate(ctx context.Context, s *database.Service, logger util.Logger, matchesTags ...string) error {
 	logger = logger.With("svc", "migrate")
 	ctx, span, logger := telemetry.StartSpan(ctx, "database:migrate", logger)
 	defer span.Complete()
 
+	var positiveTags, negativeTags []string
+	for _, t := range matchesTags {
+		if strings.HasPrefix(t, "-") {
+			negativeTags = append(negativeTags, strings.TrimPrefix(t, "-"))
+		} else {
+			positiveTags = append(positiveTags, t)
+		}
+	}
+
+	migrations := lo.Filter(databaseMigrations, func(m *MigrationFile, _ int) bool {
+		if len(matchesTags) == 0 {
+			return true
+		}
+		good := len(positiveTags) == 0 || lo.ContainsBy(positiveTags, func(x string) bool {
+			return slices.Contains(m.Tags, x)
+		})
+		bad := lo.ContainsBy(negativeTags, func(x string) bool {
+			return slices.Contains(m.Tags, x)
+		})
+		return good && !bad
+	})
+
 	err := createMigrationTableIfNeeded(ctx, s, nil, logger)
 	if err != nil {
-		return errors.Wrap(err, "unable to create migration table")
+		return errors.Wrapf(err, "unable to create migration table for database [%s]", s.Key)
 	}
 
 	tx, err := s.StartTransaction(logger)
@@ -32,12 +57,12 @@ func Migrate(ctx context.Context, s *database.Service, logger util.Logger) error
 
 	maxIdx := maxMigrationIdx(ctx, s, tx, logger)
 
-	if len(databaseMigrations) > maxIdx+1 {
-		c := len(databaseMigrations) - maxIdx
-		logger.Infof("applying [%s]...", util.StringPlural(c, "migration"))
+	if len(migrations) > maxIdx+1 {
+		c := len(migrations) - maxIdx
+		logger.Infof("applying [%s] to database [%s]...", util.StringPlural(c, "migration"), s.Key)
 	}
 
-	for i, file := range databaseMigrations {
+	for i, file := range migrations {
 		err = run(ctx, maxIdx, i, file, s, tx, logger)
 		if err != nil {
 			return errors.Wrapf(err, "error running database migration [%s]", file.Title)
@@ -48,7 +73,7 @@ func Migrate(ctx context.Context, s *database.Service, logger util.Logger) error
 		return err
 	}
 
-	logger.Infof("verified [%s]", util.StringPlural(maxIdx, "migration"))
+	logger.Infof("verified [%s] in database [%s]", util.StringPlural(maxIdx, "migration"), s.Key)
 	return nil
 }
 

@@ -2,8 +2,16 @@
 package collection
 
 import (
+	"github.com/google/uuid"
+
 	"github.com/kyleu/todoforge/app/lib/database"
 	"github.com/kyleu/todoforge/app/lib/filter"
+	"github.com/kyleu/todoforge/app/lib/svc"
+)
+
+var (
+	_ svc.ServiceID[*Collection, Collections, uuid.UUID] = (*Service)(nil)
+	_ svc.ServiceSearch[Collections]                     = (*Service)(nil)
 )
 
 type Service struct {

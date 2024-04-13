@@ -3,11 +3,11 @@
 
 set -eo pipefail
 dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-cd $dir/../..
+cd "$dir/../.."
 
 if [ "$PUBLISH_TEST" != "true" ]
 then
-  time gon "./tools/notarize/gon.amd64.hcl"
-  time gon "./tools/notarize/gon.arm64.hcl"
-  time gon "./tools/notarize/gon.all.hcl"
+  xcrun notarytool submit --apple-id $APPLE_EMAIL --team-id $APPLE_TEAM_ID --password $APPLE_PASSWORD ./build/dist/todoforge_0.1.6_darwin_amd64_desktop.dmg
+  xcrun notarytool submit --apple-id $APPLE_EMAIL --team-id $APPLE_TEAM_ID --password $APPLE_PASSWORD ./build/dist/todoforge_0.1.6_darwin_arm64_desktop.dmg
+  xcrun notarytool submit --apple-id $APPLE_EMAIL --team-id $APPLE_TEAM_ID --password $APPLE_PASSWORD ./build/dist/todoforge_0.1.6_darwin_all_desktop.dmg
 fi

@@ -3,10 +3,10 @@ package controller
 
 import (
 	"fmt"
+	"net/http"
 	"strings"
 
 	"github.com/pkg/errors"
-	"github.com/valyala/fasthttp"
 
 	"github.com/kyleu/todoforge/app"
 	"github.com/kyleu/todoforge/app/collection"
@@ -15,40 +15,46 @@ import (
 	"github.com/kyleu/todoforge/views/vcollection"
 )
 
-func CollectionList(rc *fasthttp.RequestCtx) {
-	Act("collection.list", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		q := strings.TrimSpace(string(rc.URI().QueryArgs().Peek("q")))
-		prms := ps.Params.Get("collection", nil, ps.Logger).Sanitize("collection")
+func CollectionList(w http.ResponseWriter, r *http.Request) {
+	Act("collection.list", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		q := strings.TrimSpace(r.URL.Query().Get("q"))
+		prms := ps.Params.Sanitized("collection", ps.Logger)
 		var ret collection.Collections
 		var err error
 		if q == "" {
 			ret, err = as.Services.Collection.List(ps.Context, nil, prms, ps.Logger)
+			if err != nil {
+				return "", err
+			}
 		} else {
 			ret, err = as.Services.Collection.Search(ps.Context, q, nil, prms, ps.Logger)
-		}
-		if err != nil {
-			return "", err
+			if err != nil {
+				return "", err
+			}
+			if len(ret) == 1 {
+				return FlashAndRedir(true, "single result found", ret[0].WebPath(), w, ps)
+			}
 		}
 		ps.SetTitleAndData("Collections", ret)
 		page := &vcollection.List{Models: ret, Params: ps.Params, SearchQuery: q}
-		return Render(rc, as, page, ps, "collection")
+		return Render(w, r, as, page, ps, "collection")
 	})
 }
 
-func CollectionDetail(rc *fasthttp.RequestCtx) {
-	Act("collection.detail", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret, err := collectionFromPath(rc, as, ps)
+func CollectionDetail(w http.ResponseWriter, r *http.Request) {
+	Act("collection.detail", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := collectionFromPath(r, as, ps)
 		if err != nil {
 			return "", err
 		}
 		ps.SetTitleAndData(ret.TitleString()+" (Collection)", ret)
 
-		relItemsByCollectionIDPrms := ps.Params.Get("item", nil, ps.Logger).Sanitize("item")
+		relItemsByCollectionIDPrms := ps.Params.Sanitized("item", ps.Logger)
 		relItemsByCollectionID, err := as.Services.Item.GetByCollectionID(ps.Context, nil, ret.ID, relItemsByCollectionIDPrms, ps.Logger)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to retrieve child items")
 		}
-		return Render(rc, as, &vcollection.Detail{
+		return Render(w, r, as, &vcollection.Detail{
 			Model:  ret,
 			Params: ps.Params,
 
@@ -57,20 +63,20 @@ func CollectionDetail(rc *fasthttp.RequestCtx) {
 	})
 }
 
-func CollectionCreateForm(rc *fasthttp.RequestCtx) {
-	Act("collection.create.form", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+func CollectionCreateForm(w http.ResponseWriter, r *http.Request) {
+	Act("collection.create.form", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &collection.Collection{}
-		if string(rc.QueryArgs().Peek("prototype")) == util.KeyRandom {
+		if r.URL.Query().Get("prototype") == util.KeyRandom {
 			ret = collection.Random()
 		}
 		ps.SetTitleAndData("Create [Collection]", ret)
 		ps.Data = ret
-		return Render(rc, as, &vcollection.Edit{Model: ret, IsNew: true}, ps, "collection", "Create")
+		return Render(w, r, as, &vcollection.Edit{Model: ret, IsNew: true}, ps, "collection", "Create")
 	})
 }
 
-func CollectionRandom(rc *fasthttp.RequestCtx) {
-	Act("collection.random", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+func CollectionRandom(w http.ResponseWriter, r *http.Request) {
+	Act("collection.random", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret, err := as.Services.Collection.Random(ps.Context, nil, ps.Logger)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to find random Collection")
@@ -79,9 +85,9 @@ func CollectionRandom(rc *fasthttp.RequestCtx) {
 	})
 }
 
-func CollectionCreate(rc *fasthttp.RequestCtx) {
-	Act("collection.create", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret, err := collectionFromForm(rc, true)
+func CollectionCreate(w http.ResponseWriter, r *http.Request) {
+	Act("collection.create", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := collectionFromForm(r, ps.RequestBody, true)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to parse Collection from form")
 		}
@@ -90,28 +96,28 @@ func CollectionCreate(rc *fasthttp.RequestCtx) {
 			return "", errors.Wrap(err, "unable to save newly-created Collection")
 		}
 		msg := fmt.Sprintf("Collection [%s] created", ret.String())
-		return FlashAndRedir(true, msg, ret.WebPath(), rc, ps)
+		return FlashAndRedir(true, msg, ret.WebPath(), w, ps)
 	})
 }
 
-func CollectionEditForm(rc *fasthttp.RequestCtx) {
-	Act("collection.edit.form", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret, err := collectionFromPath(rc, as, ps)
+func CollectionEditForm(w http.ResponseWriter, r *http.Request) {
+	Act("collection.edit.form", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := collectionFromPath(r, as, ps)
 		if err != nil {
 			return "", err
 		}
 		ps.SetTitleAndData("Edit "+ret.String(), ret)
-		return Render(rc, as, &vcollection.Edit{Model: ret}, ps, "collection", ret.String())
+		return Render(w, r, as, &vcollection.Edit{Model: ret}, ps, "collection", ret.String())
 	})
 }
 
-func CollectionEdit(rc *fasthttp.RequestCtx) {
-	Act("collection.edit", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret, err := collectionFromPath(rc, as, ps)
+func CollectionEdit(w http.ResponseWriter, r *http.Request) {
+	Act("collection.edit", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := collectionFromPath(r, as, ps)
 		if err != nil {
 			return "", err
 		}
-		frm, err := collectionFromForm(rc, false)
+		frm, err := collectionFromForm(r, ps.RequestBody, false)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to parse Collection from form")
 		}
@@ -121,13 +127,13 @@ func CollectionEdit(rc *fasthttp.RequestCtx) {
 			return "", errors.Wrapf(err, "unable to update Collection [%s]", frm.String())
 		}
 		msg := fmt.Sprintf("Collection [%s] updated", frm.String())
-		return FlashAndRedir(true, msg, frm.WebPath(), rc, ps)
+		return FlashAndRedir(true, msg, frm.WebPath(), w, ps)
 	})
 }
 
-func CollectionDelete(rc *fasthttp.RequestCtx) {
-	Act("collection.delete", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret, err := collectionFromPath(rc, as, ps)
+func CollectionDelete(w http.ResponseWriter, r *http.Request) {
+	Act("collection.delete", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := collectionFromPath(r, as, ps)
 		if err != nil {
 			return "", err
 		}
@@ -136,12 +142,12 @@ func CollectionDelete(rc *fasthttp.RequestCtx) {
 			return "", errors.Wrapf(err, "unable to delete collection [%s]", ret.String())
 		}
 		msg := fmt.Sprintf("Collection [%s] deleted", ret.String())
-		return FlashAndRedir(true, msg, "/collection", rc, ps)
+		return FlashAndRedir(true, msg, "/collection", w, ps)
 	})
 }
 
-func collectionFromPath(rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState) (*collection.Collection, error) {
-	idArgStr, err := cutil.RCRequiredString(rc, "id", false)
+func collectionFromPath(r *http.Request, as *app.State, ps *cutil.PageState) (*collection.Collection, error) {
+	idArgStr, err := cutil.PathString(r, "id", false)
 	if err != nil {
 		return nil, errors.Wrap(err, "must provide [id] as an argument")
 	}
@@ -153,8 +159,8 @@ func collectionFromPath(rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageSt
 	return as.Services.Collection.Get(ps.Context, nil, idArg, ps.Logger)
 }
 
-func collectionFromForm(rc *fasthttp.RequestCtx, setPK bool) (*collection.Collection, error) {
-	frm, err := cutil.ParseForm(rc)
+func collectionFromForm(r *http.Request, b []byte, setPK bool) (*collection.Collection, error) {
+	frm, err := cutil.ParseForm(r, b)
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to parse form")
 	}

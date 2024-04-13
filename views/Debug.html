@@ -10,11 +10,11 @@
 
 {% func (p *Debug) Body(as *app.State, ps *cutil.PageState) %}
   <div class="card">
-    <h3>{%s ps.Title %}</h3>
+    <h3>{%= components.SVGRefIcon(`graph`, ps) %}{%s ps.Title %}</h3>
     {%- if s, ok := ps.Data.(string); ok -%}
-    <pre class="mt">{%s s %}</pre>
+    <div class="overflow full-width"><pre class="mt">{%s s %}</pre></div>
     {%- else -%}
-    {%s= components.JSON(ps.Data) %}
+    <div class="mt">{%s= components.JSON(ps.Data) %}</div>
     {%- endif -%}
   </div>
 {% endfunc %}

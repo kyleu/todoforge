@@ -6,8 +6,11 @@ import (
 
 	"github.com/google/uuid"
 
+	"github.com/kyleu/todoforge/app/lib/svc"
 	"github.com/kyleu/todoforge/app/util"
 )
+
+var _ svc.Model = (*Item)(nil)
 
 type Item struct {
 	ID           uuid.UUID `json:"id,omitempty"`
@@ -41,10 +44,25 @@ func Random() *Item {
 	}
 }
 
+func (i *Item) Strings() []string {
+	return []string{i.ID.String(), i.CollectionID.String(), i.Name, util.TimeToFull(&i.Created)}
+}
+
+func (i *Item) ToCSV() ([]string, [][]string) {
+	return FieldDescs.Keys(), [][]string{i.Strings()}
+}
+
 func (i *Item) WebPath() string {
 	return "/collection/item/" + i.ID.String()
 }
 
 func (i *Item) ToData() []any {
 	return []any{i.ID, i.CollectionID, i.Name, i.Created}
+}
+
+var FieldDescs = util.FieldDescs{
+	{Key: "id", Title: "ID", Description: "", Type: "uuid"},
+	{Key: "collectionID", Title: "Collection ID", Description: "", Type: "uuid"},
+	{Key: "name", Title: "Name", Description: "", Type: "string"},
+	{Key: "created", Title: "Created", Description: "", Type: "timestamp"},
 }

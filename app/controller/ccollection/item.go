@@ -3,12 +3,12 @@ package ccollection
 
 import (
 	"fmt"
+	"net/http"
 	"strings"
 
 	"github.com/google/uuid"
 	"github.com/pkg/errors"
 	"github.com/samber/lo"
-	"github.com/valyala/fasthttp"
 
 	"github.com/kyleu/todoforge/app"
 	"github.com/kyleu/todoforge/app/collection/item"
@@ -18,19 +18,25 @@ import (
 	"github.com/kyleu/todoforge/views/vcollection/vitem"
 )
 
-func ItemList(rc *fasthttp.RequestCtx) {
-	controller.Act("item.list", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		q := strings.TrimSpace(string(rc.URI().QueryArgs().Peek("q")))
-		prms := ps.Params.Get("item", nil, ps.Logger).Sanitize("item")
+func ItemList(w http.ResponseWriter, r *http.Request) {
+	controller.Act("item.list", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		q := strings.TrimSpace(r.URL.Query().Get("q"))
+		prms := ps.Params.Sanitized("item", ps.Logger)
 		var ret item.Items
 		var err error
 		if q == "" {
 			ret, err = as.Services.Item.List(ps.Context, nil, prms, ps.Logger)
+			if err != nil {
+				return "", err
+			}
 		} else {
 			ret, err = as.Services.Item.Search(ps.Context, q, nil, prms, ps.Logger)
-		}
-		if err != nil {
-			return "", err
+			if err != nil {
+				return "", err
+			}
+			if len(ret) == 1 {
+				return controller.FlashAndRedir(true, "single result found", ret[0].WebPath(), w, ps)
+			}
 		}
 		ps.SetTitleAndData("Items", ret)
 		collectionIDsByCollectionID := lo.Map(ret, func(x *item.Item, _ int) uuid.UUID {
@@ -41,14 +47,14 @@ func ItemList(rc *fasthttp.RequestCtx) {
 			return "", err
 		}
 		page := &vitem.List{Models: ret, CollectionsByCollectionID: collectionsByCollectionID, Params: ps.Params, SearchQuery: q}
-		return controller.Render(rc, as, page, ps, "collection", "item")
+		return controller.Render(w, r, as, page, ps, "collection", "item")
 	})
 }
 
 //nolint:lll
-func ItemDetail(rc *fasthttp.RequestCtx) {
-	controller.Act("item.detail", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret, err := itemFromPath(rc, as, ps)
+func ItemDetail(w http.ResponseWriter, r *http.Request) {
+	controller.Act("item.detail", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := itemFromPath(r, as, ps)
 		if err != nil {
 			return "", err
 		}
@@ -56,14 +62,14 @@ func ItemDetail(rc *fasthttp.RequestCtx) {
 
 		collectionByCollectionID, _ := as.Services.Collection.Get(ps.Context, nil, ret.CollectionID, ps.Logger)
 
-		return controller.Render(rc, as, &vitem.Detail{Model: ret, CollectionByCollectionID: collectionByCollectionID}, ps, "collection", "item", ret.TitleString()+"**file")
+		return controller.Render(w, r, as, &vitem.Detail{Model: ret, CollectionByCollectionID: collectionByCollectionID}, ps, "collection", "item", ret.TitleString()+"**file")
 	})
 }
 
-func ItemCreateForm(rc *fasthttp.RequestCtx) {
-	controller.Act("item.create.form", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+func ItemCreateForm(w http.ResponseWriter, r *http.Request) {
+	controller.Act("item.create.form", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &item.Item{}
-		if string(rc.QueryArgs().Peek("prototype")) == util.KeyRandom {
+		if r.URL.Query().Get("prototype") == util.KeyRandom {
 			ret = item.Random()
 			randomCollection, err := as.Services.Collection.Random(ps.Context, nil, ps.Logger)
 			if err == nil && randomCollection != nil {
@@ -72,12 +78,12 @@ func ItemCreateForm(rc *fasthttp.RequestCtx) {
 		}
 		ps.SetTitleAndData("Create [Item]", ret)
 		ps.Data = ret
-		return controller.Render(rc, as, &vitem.Edit{Model: ret, IsNew: true}, ps, "collection", "item", "Create")
+		return controller.Render(w, r, as, &vitem.Edit{Model: ret, IsNew: true}, ps, "collection", "item", "Create")
 	})
 }
 
-func ItemRandom(rc *fasthttp.RequestCtx) {
-	controller.Act("item.random", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
+func ItemRandom(w http.ResponseWriter, r *http.Request) {
+	controller.Act("item.random", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret, err := as.Services.Item.Random(ps.Context, nil, ps.Logger)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to find random Item")
@@ -86,9 +92,9 @@ func ItemRandom(rc *fasthttp.RequestCtx) {
 	})
 }
 
-func ItemCreate(rc *fasthttp.RequestCtx) {
-	controller.Act("item.create", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret, err := itemFromForm(rc, true)
+func ItemCreate(w http.ResponseWriter, r *http.Request) {
+	controller.Act("item.create", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := itemFromForm(r, ps.RequestBody, true)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to parse Item from form")
 		}
@@ -97,28 +103,28 @@ func ItemCreate(rc *fasthttp.RequestCtx) {
 			return "", errors.Wrap(err, "unable to save newly-created Item")
 		}
 		msg := fmt.Sprintf("Item [%s] created", ret.String())
-		return controller.FlashAndRedir(true, msg, ret.WebPath(), rc, ps)
+		return controller.FlashAndRedir(true, msg, ret.WebPath(), w, ps)
 	})
 }
 
-func ItemEditForm(rc *fasthttp.RequestCtx) {
-	controller.Act("item.edit.form", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret, err := itemFromPath(rc, as, ps)
+func ItemEditForm(w http.ResponseWriter, r *http.Request) {
+	controller.Act("item.edit.form", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := itemFromPath(r, as, ps)
 		if err != nil {
 			return "", err
 		}
 		ps.SetTitleAndData("Edit "+ret.String(), ret)
-		return controller.Render(rc, as, &vitem.Edit{Model: ret}, ps, "collection", "item", ret.String())
+		return controller.Render(w, r, as, &vitem.Edit{Model: ret}, ps, "collection", "item", ret.String())
 	})
 }
 
-func ItemEdit(rc *fasthttp.RequestCtx) {
-	controller.Act("item.edit", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret, err := itemFromPath(rc, as, ps)
+func ItemEdit(w http.ResponseWriter, r *http.Request) {
+	controller.Act("item.edit", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := itemFromPath(r, as, ps)
 		if err != nil {
 			return "", err
 		}
-		frm, err := itemFromForm(rc, false)
+		frm, err := itemFromForm(r, ps.RequestBody, false)
 		if err != nil {
 			return "", errors.Wrap(err, "unable to parse Item from form")
 		}
@@ -128,13 +134,13 @@ func ItemEdit(rc *fasthttp.RequestCtx) {
 			return "", errors.Wrapf(err, "unable to update Item [%s]", frm.String())
 		}
 		msg := fmt.Sprintf("Item [%s] updated", frm.String())
-		return controller.FlashAndRedir(true, msg, frm.WebPath(), rc, ps)
+		return controller.FlashAndRedir(true, msg, frm.WebPath(), w, ps)
 	})
 }
 
-func ItemDelete(rc *fasthttp.RequestCtx) {
-	controller.Act("item.delete", rc, func(as *app.State, ps *cutil.PageState) (string, error) {
-		ret, err := itemFromPath(rc, as, ps)
+func ItemDelete(w http.ResponseWriter, r *http.Request) {
+	controller.Act("item.delete", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
+		ret, err := itemFromPath(r, as, ps)
 		if err != nil {
 			return "", err
 		}
@@ -143,12 +149,12 @@ func ItemDelete(rc *fasthttp.RequestCtx) {
 			return "", errors.Wrapf(err, "unable to delete item [%s]", ret.String())
 		}
 		msg := fmt.Sprintf("Item [%s] deleted", ret.String())
-		return controller.FlashAndRedir(true, msg, "/collection/item", rc, ps)
+		return controller.FlashAndRedir(true, msg, "/collection/item", w, ps)
 	})
 }
 
-func itemFromPath(rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState) (*item.Item, error) {
-	idArgStr, err := cutil.RCRequiredString(rc, "id", false)
+func itemFromPath(r *http.Request, as *app.State, ps *cutil.PageState) (*item.Item, error) {
+	idArgStr, err := cutil.PathString(r, "id", false)
 	if err != nil {
 		return nil, errors.Wrap(err, "must provide [id] as an argument")
 	}
@@ -160,8 +166,8 @@ func itemFromPath(rc *fasthttp.RequestCtx, as *app.State, ps *cutil.PageState) (
 	return as.Services.Item.Get(ps.Context, nil, idArg, ps.Logger)
 }
 
-func itemFromForm(rc *fasthttp.RequestCtx, setPK bool) (*item.Item, error) {
-	frm, err := cutil.ParseForm(rc)
+func itemFromForm(r *http.Request, b []byte, setPK bool) (*item.Item, error) {
+	frm, err := cutil.ParseForm(r, b)
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to parse form")
 	}

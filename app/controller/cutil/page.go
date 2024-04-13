@@ -4,12 +4,12 @@ package cutil
 import (
 	"context"
 	"fmt"
+	"net/http"
+	"net/url"
 	"slices"
-	"strings"
 	"time"
 
 	"github.com/samber/lo"
-	"github.com/valyala/fasthttp"
 
 	"github.com/kyleu/todoforge/app"
 	"github.com/kyleu/todoforge/app/controller/cmenu"
@@ -42,7 +42,7 @@ type PageState struct {
 	Title          string            `json:"title,omitempty"`
 	Description    string            `json:"description,omitempty"`
 	Method         string            `json:"method,omitempty"`
-	URI            *fasthttp.URI     `json:"-"`
+	URI            *url.URL          `json:"-"`
 	Menu           menu.Items        `json:"menu,omitempty"`
 	Breadcrumbs    cmenu.Breadcrumbs `json:"breadcrumbs,omitempty"`
 	Flashes        []string          `json:"flashes,omitempty"`
@@ -60,6 +60,7 @@ type PageState struct {
 	ProfilePath    string            `json:"profilePath,omitempty"`
 	HideMenu       bool              `json:"hideMenu,omitempty"`
 	ForceRedirect  string            `json:"forceRedirect,omitempty"`
+	DefaultFormat  string            `json:"defaultFormat,omitempty"`
 	HeaderContent  string            `json:"headerContent,omitempty"`
 	Browser        string            `json:"browser,omitempty"`
 	BrowserVersion string            `json:"browserVersion,omitempty"`
@@ -69,6 +70,7 @@ type PageState struct {
 	Data           any               `json:"data,omitempty"`
 	Started        time.Time         `json:"started,omitempty"`
 	RenderElapsed  float64           `json:"renderElapsed,omitempty"`
+	RequestBody    []byte            `json:"-"`
 	Logger         util.Logger       `json:"-"`
 	Context        context.Context   `json:"-"` //nolint:containedctx // properly closed, never directly used
 	Span           *telemetry.Span   `json:"-"`
@@ -94,7 +96,7 @@ func (p *PageState) Username() string {
 	return p.Profile.Name
 }
 
-func (p *PageState) Clean(_ *fasthttp.RequestCtx, as *app.State) error {
+func (p *PageState) Clean(_ *http.Request, as *app.State) error {
 	if p.Profile != nil && p.Profile.Theme == "" {
 		p.Profile.Theme = theme.Default.Key
 	}
@@ -140,23 +142,23 @@ func (p *PageState) LogError(msg string, args ...any) {
 }
 
 func (p *PageState) ClassDecl() string {
-	var ret []string
+	ret := &util.StringSlice{}
 	if p.Profile.Mode != "" {
-		ret = append(ret, p.Profile.ModeClass())
+		ret.Push(p.Profile.ModeClass())
 	}
 	if p.Browser != "" {
-		ret = append(ret, "browser-"+p.Browser)
+		ret.Push("browser-" + p.Browser)
 	}
 	if p.OS != "" {
-		ret = append(ret, "os-"+p.OS)
+		ret.Push("os-" + p.OS)
 	}
 	if p.Platform != "" {
-		ret = append(ret, "platform-"+p.Platform)
+		ret.Push("platform-" + p.Platform)
 	}
-	if len(ret) == 0 {
+	if ret.Empty() {
 		return ""
 	}
-	classes := strings.Join(ret, " ")
+	classes := ret.Join(" ")
 	return fmt.Sprintf(` class=%q`, classes)
 }
 

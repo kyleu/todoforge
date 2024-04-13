@@ -37,6 +37,8 @@ func (p *Debug) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.P
   <div class="card">
     <h3>`)
 //line views/Debug.html:13
+	components.StreamSVGRefIcon(qw422016, `graph`, ps)
+//line views/Debug.html:13
 	qw422016.E().S(ps.Title)
 //line views/Debug.html:13
 	qw422016.N().S(`</h3>
@@ -44,20 +46,20 @@ func (p *Debug) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.P
 //line views/Debug.html:14
 	if s, ok := ps.Data.(string); ok {
 //line views/Debug.html:14
-		qw422016.N().S(`    <pre class="mt">`)
+		qw422016.N().S(`    <div class="overflow full-width"><pre class="mt">`)
 //line views/Debug.html:15
 		qw422016.E().S(s)
 //line views/Debug.html:15
-		qw422016.N().S(`</pre>
+		qw422016.N().S(`</pre></div>
 `)
 //line views/Debug.html:16
 	} else {
 //line views/Debug.html:16
-		qw422016.N().S(`    `)
+		qw422016.N().S(`    <div class="mt">`)
 //line views/Debug.html:17
 		qw422016.N().S(components.JSON(ps.Data))
 //line views/Debug.html:17
-		qw422016.N().S(`
+		qw422016.N().S(`</div>
 `)
 //line views/Debug.html:18
 	}

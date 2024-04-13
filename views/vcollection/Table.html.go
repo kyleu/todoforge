@@ -13,121 +13,124 @@ import (
 	"github.com/kyleu/todoforge/app/controller/cutil"
 	"github.com/kyleu/todoforge/app/lib/filter"
 	"github.com/kyleu/todoforge/views/components"
+	"github.com/kyleu/todoforge/views/components/view"
 )
 
-//line views/vcollection/Table.html:10
+//line views/vcollection/Table.html:11
 import (
 	qtio422016 "io"
 
 	qt422016 "github.com/valyala/quicktemplate"
 )
 
-//line views/vcollection/Table.html:10
+//line views/vcollection/Table.html:11
 var (
 	_ = qtio422016.Copy
 	_ = qt422016.AcquireByteBuffer
 )
 
-//line views/vcollection/Table.html:10
+//line views/vcollection/Table.html:11
 func StreamTable(qw422016 *qt422016.Writer, models collection.Collections, params filter.ParamSet, as *app.State, ps *cutil.PageState) {
-//line views/vcollection/Table.html:10
+//line views/vcollection/Table.html:11
 	qw422016.N().S(`
 `)
-//line views/vcollection/Table.html:11
-	prms := params.Get("collection", nil, ps.Logger).Sanitize("collection")
+//line views/vcollection/Table.html:12
+	prms := params.Sanitized("collection", ps.Logger)
 
-//line views/vcollection/Table.html:11
-	qw422016.N().S(`  <table>
-    <thead>
-      <tr>
-        `)
-//line views/vcollection/Table.html:15
+//line views/vcollection/Table.html:12
+	qw422016.N().S(`  <div class="overflow clear">
+    <table>
+      <thead>
+        <tr>
+          `)
+//line views/vcollection/Table.html:17
 	components.StreamTableHeaderSimple(qw422016, "collection", "id", "ID", "UUID in format (00000000-0000-0000-0000-000000000000)", prms, ps.URI, ps)
-//line views/vcollection/Table.html:15
+//line views/vcollection/Table.html:17
 	qw422016.N().S(`
-        `)
-//line views/vcollection/Table.html:16
+          `)
+//line views/vcollection/Table.html:18
 	components.StreamTableHeaderSimple(qw422016, "collection", "name", "Name", "String text", prms, ps.URI, ps)
-//line views/vcollection/Table.html:16
+//line views/vcollection/Table.html:18
 	qw422016.N().S(`
-        `)
-//line views/vcollection/Table.html:17
+          `)
+//line views/vcollection/Table.html:19
 	components.StreamTableHeaderSimple(qw422016, "collection", "created", "Created", "Date and time, in almost any format", prms, ps.URI, ps)
-//line views/vcollection/Table.html:17
+//line views/vcollection/Table.html:19
 	qw422016.N().S(`
-      </tr>
-    </thead>
-    <tbody>
+        </tr>
+      </thead>
+      <tbody>
 `)
-//line views/vcollection/Table.html:21
+//line views/vcollection/Table.html:23
 	for _, model := range models {
-//line views/vcollection/Table.html:21
-		qw422016.N().S(`      <tr>
-        <td><a href="/collection/`)
 //line views/vcollection/Table.html:23
-		components.StreamDisplayUUID(qw422016, &model.ID)
-//line views/vcollection/Table.html:23
+		qw422016.N().S(`        <tr>
+          <td><a href="/collection/`)
+//line views/vcollection/Table.html:25
+		view.StreamUUID(qw422016, &model.ID)
+//line views/vcollection/Table.html:25
 		qw422016.N().S(`">`)
-//line views/vcollection/Table.html:23
-		components.StreamDisplayUUID(qw422016, &model.ID)
-//line views/vcollection/Table.html:23
+//line views/vcollection/Table.html:25
+		view.StreamUUID(qw422016, &model.ID)
+//line views/vcollection/Table.html:25
 		qw422016.N().S(`</a></td>
-        <td><strong>`)
-//line views/vcollection/Table.html:24
-		qw422016.E().S(model.Name)
-//line views/vcollection/Table.html:24
+          <td><strong>`)
+//line views/vcollection/Table.html:26
+		view.StreamString(qw422016, model.Name)
+//line views/vcollection/Table.html:26
 		qw422016.N().S(`</strong></td>
-        <td>`)
-//line views/vcollection/Table.html:25
-		components.StreamDisplayTimestamp(qw422016, &model.Created)
-//line views/vcollection/Table.html:25
-		qw422016.N().S(`</td>
-      </tr>
-`)
+          <td>`)
 //line views/vcollection/Table.html:27
-	}
-//line views/vcollection/Table.html:28
-	if prms.HasNextPage(len(models)+prms.Offset) || prms.HasPreviousPage() {
-//line views/vcollection/Table.html:28
-		qw422016.N().S(`      <tr>
-        <td colspan="3">`)
-//line views/vcollection/Table.html:30
-		components.StreamPagination(qw422016, len(models)+prms.Offset, prms, ps.URI)
-//line views/vcollection/Table.html:30
+		view.StreamTimestamp(qw422016, &model.Created)
+//line views/vcollection/Table.html:27
 		qw422016.N().S(`</td>
-      </tr>
+        </tr>
 `)
-//line views/vcollection/Table.html:32
+//line views/vcollection/Table.html:29
 	}
-//line views/vcollection/Table.html:32
-	qw422016.N().S(`    </tbody>
-  </table>
+//line views/vcollection/Table.html:29
+	qw422016.N().S(`      </tbody>
+    </table>
+  </div>
 `)
+//line views/vcollection/Table.html:33
+	if prms.HasNextPage(len(models)+prms.Offset) || prms.HasPreviousPage() {
+//line views/vcollection/Table.html:33
+		qw422016.N().S(`  <hr />
+  `)
 //line views/vcollection/Table.html:35
+		components.StreamPagination(qw422016, len(models)+prms.Offset, prms, ps.URI)
+//line views/vcollection/Table.html:35
+		qw422016.N().S(`
+  <div class="clear"></div>
+`)
+//line views/vcollection/Table.html:37
+	}
+//line views/vcollection/Table.html:38
 }
 
-//line views/vcollection/Table.html:35
+//line views/vcollection/Table.html:38
 func WriteTable(qq422016 qtio422016.Writer, models collection.Collections, params filter.ParamSet, as *app.State, ps *cutil.PageState) {
-//line views/vcollection/Table.html:35
+//line views/vcollection/Table.html:38
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vcollection/Table.html:35
+//line views/vcollection/Table.html:38
 	StreamTable(qw422016, models, params, as, ps)
-//line views/vcollection/Table.html:35
+//line views/vcollection/Table.html:38
 	qt422016.ReleaseWriter(qw422016)
-//line views/vcollection/Table.html:35
+//line views/vcollection/Table.html:38
 }
 
-//line views/vcollection/Table.html:35
+//line views/vcollection/Table.html:38
 func Table(models collection.Collections, params filter.ParamSet, as *app.State, ps *cutil.PageState) string {
-//line views/vcollection/Table.html:35
+//line views/vcollection/Table.html:38
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vcollection/Table.html:35
+//line views/vcollection/Table.html:38
 	WriteTable(qb422016, models, params, as, ps)
-//line views/vcollection/Table.html:35
+//line views/vcollection/Table.html:38
 	qs422016 := string(qb422016.B)
-//line views/vcollection/Table.html:35
+//line views/vcollection/Table.html:38
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vcollection/Table.html:35
+//line views/vcollection/Table.html:38
 	return qs422016
-//line views/vcollection/Table.html:35
+//line views/vcollection/Table.html:38
 }
