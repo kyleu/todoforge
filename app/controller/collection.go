@@ -32,12 +32,12 @@ func CollectionList(w http.ResponseWriter, r *http.Request) {
 				return "", err
 			}
 			if len(ret) == 1 {
-				return FlashAndRedir(true, "single result found", ret[0].WebPath(), w, ps)
+				return FlashAndRedir(true, "single result found", ret[0].WebPath(), ps)
 			}
 		}
 		ps.SetTitleAndData("Collections", ret)
 		page := &vcollection.List{Models: ret, Params: ps.Params, SearchQuery: q}
-		return Render(w, r, as, page, ps, "collection")
+		return Render(r, as, page, ps, "collection")
 	})
 }
 
@@ -54,7 +54,7 @@ func CollectionDetail(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", errors.Wrap(err, "unable to retrieve child items")
 		}
-		return Render(w, r, as, &vcollection.Detail{
+		return Render(r, as, &vcollection.Detail{
 			Model:  ret,
 			Params: ps.Params,
 
@@ -71,7 +71,7 @@ func CollectionCreateForm(w http.ResponseWriter, r *http.Request) {
 		}
 		ps.SetTitleAndData("Create [Collection]", ret)
 		ps.Data = ret
-		return Render(w, r, as, &vcollection.Edit{Model: ret, IsNew: true}, ps, "collection", "Create")
+		return Render(r, as, &vcollection.Edit{Model: ret, IsNew: true}, ps, "collection", "Create")
 	})
 }
 
@@ -96,7 +96,7 @@ func CollectionCreate(w http.ResponseWriter, r *http.Request) {
 			return "", errors.Wrap(err, "unable to save newly-created Collection")
 		}
 		msg := fmt.Sprintf("Collection [%s] created", ret.String())
-		return FlashAndRedir(true, msg, ret.WebPath(), w, ps)
+		return FlashAndRedir(true, msg, ret.WebPath(), ps)
 	})
 }
 
@@ -107,7 +107,7 @@ func CollectionEditForm(w http.ResponseWriter, r *http.Request) {
 			return "", err
 		}
 		ps.SetTitleAndData("Edit "+ret.String(), ret)
-		return Render(w, r, as, &vcollection.Edit{Model: ret}, ps, "collection", ret.String())
+		return Render(r, as, &vcollection.Edit{Model: ret}, ps, "collection", ret.String())
 	})
 }
 
@@ -127,7 +127,7 @@ func CollectionEdit(w http.ResponseWriter, r *http.Request) {
 			return "", errors.Wrapf(err, "unable to update Collection [%s]", frm.String())
 		}
 		msg := fmt.Sprintf("Collection [%s] updated", frm.String())
-		return FlashAndRedir(true, msg, frm.WebPath(), w, ps)
+		return FlashAndRedir(true, msg, frm.WebPath(), ps)
 	})
 }
 
@@ -142,7 +142,7 @@ func CollectionDelete(w http.ResponseWriter, r *http.Request) {
 			return "", errors.Wrapf(err, "unable to delete collection [%s]", ret.String())
 		}
 		msg := fmt.Sprintf("Collection [%s] deleted", ret.String())
-		return FlashAndRedir(true, msg, "/collection", w, ps)
+		return FlashAndRedir(true, msg, "/collection", ps)
 	})
 }
 

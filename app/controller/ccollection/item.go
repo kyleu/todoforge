@@ -35,7 +35,7 @@ func ItemList(w http.ResponseWriter, r *http.Request) {
 				return "", err
 			}
 			if len(ret) == 1 {
-				return controller.FlashAndRedir(true, "single result found", ret[0].WebPath(), w, ps)
+				return controller.FlashAndRedir(true, "single result found", ret[0].WebPath(), ps)
 			}
 		}
 		ps.SetTitleAndData("Items", ret)
@@ -47,7 +47,7 @@ func ItemList(w http.ResponseWriter, r *http.Request) {
 			return "", err
 		}
 		page := &vitem.List{Models: ret, CollectionsByCollectionID: collectionsByCollectionID, Params: ps.Params, SearchQuery: q}
-		return controller.Render(w, r, as, page, ps, "collection", "item")
+		return controller.Render(r, as, page, ps, "collection", "item")
 	})
 }
 
@@ -62,7 +62,7 @@ func ItemDetail(w http.ResponseWriter, r *http.Request) {
 
 		collectionByCollectionID, _ := as.Services.Collection.Get(ps.Context, nil, ret.CollectionID, ps.Logger)
 
-		return controller.Render(w, r, as, &vitem.Detail{Model: ret, CollectionByCollectionID: collectionByCollectionID}, ps, "collection", "item", ret.TitleString()+"**file")
+		return controller.Render(r, as, &vitem.Detail{Model: ret, CollectionByCollectionID: collectionByCollectionID}, ps, "collection", "item", ret.TitleString()+"**file")
 	})
 }
 
@@ -78,7 +78,7 @@ func ItemCreateForm(w http.ResponseWriter, r *http.Request) {
 		}
 		ps.SetTitleAndData("Create [Item]", ret)
 		ps.Data = ret
-		return controller.Render(w, r, as, &vitem.Edit{Model: ret, IsNew: true}, ps, "collection", "item", "Create")
+		return controller.Render(r, as, &vitem.Edit{Model: ret, IsNew: true}, ps, "collection", "item", "Create")
 	})
 }
 
@@ -103,7 +103,7 @@ func ItemCreate(w http.ResponseWriter, r *http.Request) {
 			return "", errors.Wrap(err, "unable to save newly-created Item")
 		}
 		msg := fmt.Sprintf("Item [%s] created", ret.String())
-		return controller.FlashAndRedir(true, msg, ret.WebPath(), w, ps)
+		return controller.FlashAndRedir(true, msg, ret.WebPath(), ps)
 	})
 }
 
@@ -114,7 +114,7 @@ func ItemEditForm(w http.ResponseWriter, r *http.Request) {
 			return "", err
 		}
 		ps.SetTitleAndData("Edit "+ret.String(), ret)
-		return controller.Render(w, r, as, &vitem.Edit{Model: ret}, ps, "collection", "item", ret.String())
+		return controller.Render(r, as, &vitem.Edit{Model: ret}, ps, "collection", "item", ret.String())
 	})
 }
 
@@ -134,7 +134,7 @@ func ItemEdit(w http.ResponseWriter, r *http.Request) {
 			return "", errors.Wrapf(err, "unable to update Item [%s]", frm.String())
 		}
 		msg := fmt.Sprintf("Item [%s] updated", frm.String())
-		return controller.FlashAndRedir(true, msg, frm.WebPath(), w, ps)
+		return controller.FlashAndRedir(true, msg, frm.WebPath(), ps)
 	})
 }
 
@@ -149,7 +149,7 @@ func ItemDelete(w http.ResponseWriter, r *http.Request) {
 			return "", errors.Wrapf(err, "unable to delete item [%s]", ret.String())
 		}
 		msg := fmt.Sprintf("Item [%s] deleted", ret.String())
-		return controller.FlashAndRedir(true, msg, "/collection/item", w, ps)
+		return controller.FlashAndRedir(true, msg, "/collection/item", ps)
 	})
 }
 

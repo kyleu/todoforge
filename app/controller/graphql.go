@@ -22,7 +22,7 @@ func GraphQLIndex(w http.ResponseWriter, r *http.Request) {
 			return as.GraphQL.ExecCount(key)
 		})
 		ps.SetTitleAndData("GraphQL List", keys)
-		return Render(w, r, as, &vgraphql.List{Keys: keys, Counts: counts}, ps, "graphql")
+		return Render(r, as, &vgraphql.List{Keys: keys, Counts: counts}, ps, "graphql")
 	})
 }
 
@@ -43,7 +43,7 @@ func GraphQLDetail(w http.ResponseWriter, r *http.Request) {
 		if len(titles) > 1 {
 			bc = append(bc, key)
 		}
-		return Render(w, r, as, &vgraphql.Detail{Key: key}, ps, bc...)
+		return Render(r, as, &vgraphql.Detail{Key: key}, ps, bc...)
 	})
 }
 
@@ -68,6 +68,6 @@ func GraphQLRun(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", err
 		}
-		return cutil.RespondMIME("", "application/json", "json", util.ToJSONBytes(rsp, true), w)
+		return cutil.RespondMIME("", "application/json", "json", util.ToJSONBytes(rsp, true), ps.W)
 	})
 }
