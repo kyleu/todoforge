@@ -1,5 +1,7 @@
 -- Content managed by Project Forge, see [projectforge.md] for details.
--- {% func SizeInfo() %}
+-- {% func SizeInfo(dbType string) %}
+-- {% switch dbType %}
+-- {% case "sqlite" %}
 select
   'default' as "table_schema",
   "name" as "table_name",
@@ -15,4 +17,7 @@ select
 from "sqlite_master"
 where "type" = 'table'
 order by "table_name";
+-- {% default %}
+select 'unhandled database type [{%s dbType %}]';
+-- {% endswitch %}
 -- {% endfunc %}

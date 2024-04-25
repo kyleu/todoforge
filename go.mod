@@ -38,7 +38,7 @@ require (
 	golang.org/x/mobile v0.0.0-20240404231514-09dbf07665ed
 	golang.org/x/oauth2 v0.19.0
 	gopkg.in/yaml.v2 v2.4.0
-	modernc.org/sqlite v1.29.6
+	modernc.org/sqlite v1.29.8
 )
 
 require (

@@ -3,7 +3,6 @@ package database
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/samber/lo"
 
@@ -63,19 +62,11 @@ func (ts sizeRows) ToSizes() TableSizes {
 }
 
 func (s *Service) Sizes(ctx context.Context, logger util.Logger) (TableSizes, error) {
-	q := schema.SizeInfo()
+	q := schema.SizeInfo(s.Type.Key)
 	ret := sizeRows{}
 	err := s.Select(ctx, &ret, q, nil, logger)
 	if err != nil {
 		return nil, err
-	}
-	for _, r := range ret {
-		sizeq := fmt.Sprintf("select count(*) as x from %q", r.TableName)
-		rowEstimate, err := s.SingleInt(ctx, sizeq, nil, logger, r.TableName)
-		if err != nil {
-			return nil, err
-		}
-		r.RowEstimate = fmt.Sprint(rowEstimate)
 	}
 	return ret.ToSizes(), nil
 }

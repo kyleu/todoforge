@@ -10,11 +10,13 @@ import (
 	"github.com/kyleu/todoforge/app/util"
 )
 
-const explainPrefix = "explain query plan "
-
 func (s *Service) Explain(ctx context.Context, q string, values []any, _ util.Logger) ([]util.ValueMap, error) {
 	q = strings.TrimSpace(q)
+	explainPrefix := "explain "
 	if !strings.HasPrefix(q, explainPrefix) {
+		if s.Type.Key == TypeSQLite.Key {
+			explainPrefix += "query plan "
+		}
 		q = explainPrefix + q
 	}
 	res, err := s.db.QueryxContext(ctx, q, values...)
