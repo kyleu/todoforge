@@ -48,6 +48,7 @@
   </div>
   {%- comment %}$PF_SECTION_START(extra)${% endcomment -%}
   {%- comment %}$PF_SECTION_END(extra)${% endcomment -%}
+  {%- code relationHelper := collection.Collections{p.Model} -%}
   <div class="card">
     <h3 class="mb">Relations</h3>
     <ul class="accordion">
@@ -63,7 +64,7 @@
           <em>no related Items</em>
           {%- else -%}
           <div class="overflow clear">
-            {%= vitem.Table(p.RelItemsByCollectionID, nil, p.Params, as, ps) %}
+            {%= vitem.Table(p.RelItemsByCollectionID, relationHelper, p.Params, as, ps) %}
           </div>
           {%- endif -%}
         </div></div></div>

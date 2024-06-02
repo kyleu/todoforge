@@ -104,93 +104,96 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
     </div>
   </div>
 `)
-//line views/vcollection/Detail.html:50
+//line views/vcollection/Detail.html:51
+	relationHelper := collection.Collections{p.Model}
+
+//line views/vcollection/Detail.html:51
 	qw422016.N().S(`  <div class="card">
     <h3 class="mb">Relations</h3>
     <ul class="accordion">
       <li>
         <input id="accordion-ItemsByCollectionID" type="checkbox" hidden="hidden"`)
-//line views/vcollection/Detail.html:55
+//line views/vcollection/Detail.html:56
 	if p.Params.Specifies(`item`) {
-//line views/vcollection/Detail.html:55
+//line views/vcollection/Detail.html:56
 		qw422016.N().S(` checked="checked"`)
-//line views/vcollection/Detail.html:55
+//line views/vcollection/Detail.html:56
 	}
-//line views/vcollection/Detail.html:55
+//line views/vcollection/Detail.html:56
 	qw422016.N().S(` />
         <label for="accordion-ItemsByCollectionID">
           `)
-//line views/vcollection/Detail.html:57
+//line views/vcollection/Detail.html:58
 	components.StreamExpandCollapse(qw422016, 3, ps)
-//line views/vcollection/Detail.html:57
+//line views/vcollection/Detail.html:58
 	qw422016.N().S(`
           `)
-//line views/vcollection/Detail.html:58
+//line views/vcollection/Detail.html:59
 	components.StreamSVGRef(qw422016, `file`, 16, 16, `icon`, ps)
-//line views/vcollection/Detail.html:58
+//line views/vcollection/Detail.html:59
 	qw422016.N().S(`
           `)
-//line views/vcollection/Detail.html:59
+//line views/vcollection/Detail.html:60
 	qw422016.E().S(util.StringPlural(len(p.RelItemsByCollectionID), "Item"))
-//line views/vcollection/Detail.html:59
+//line views/vcollection/Detail.html:60
 	qw422016.N().S(` by [Collection ID]
         </label>
         <div class="bd"><div><div>
 `)
-//line views/vcollection/Detail.html:62
+//line views/vcollection/Detail.html:63
 	if len(p.RelItemsByCollectionID) == 0 {
-//line views/vcollection/Detail.html:62
+//line views/vcollection/Detail.html:63
 		qw422016.N().S(`          <em>no related Items</em>
 `)
-//line views/vcollection/Detail.html:64
+//line views/vcollection/Detail.html:65
 	} else {
-//line views/vcollection/Detail.html:64
+//line views/vcollection/Detail.html:65
 		qw422016.N().S(`          <div class="overflow clear">
             `)
-//line views/vcollection/Detail.html:66
-		vitem.StreamTable(qw422016, p.RelItemsByCollectionID, nil, p.Params, as, ps)
-//line views/vcollection/Detail.html:66
+//line views/vcollection/Detail.html:67
+		vitem.StreamTable(qw422016, p.RelItemsByCollectionID, relationHelper, p.Params, as, ps)
+//line views/vcollection/Detail.html:67
 		qw422016.N().S(`
           </div>
 `)
-//line views/vcollection/Detail.html:68
+//line views/vcollection/Detail.html:69
 	}
-//line views/vcollection/Detail.html:68
+//line views/vcollection/Detail.html:69
 	qw422016.N().S(`        </div></div></div>
       </li>
     </ul>
   </div>
   `)
-//line views/vcollection/Detail.html:73
+//line views/vcollection/Detail.html:74
 	components.StreamJSONModal(qw422016, "collection", "Collection JSON", p.Model, 1)
-//line views/vcollection/Detail.html:73
+//line views/vcollection/Detail.html:74
 	qw422016.N().S(`
 `)
-//line views/vcollection/Detail.html:74
+//line views/vcollection/Detail.html:75
 }
 
-//line views/vcollection/Detail.html:74
+//line views/vcollection/Detail.html:75
 func (p *Detail) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vcollection/Detail.html:74
+//line views/vcollection/Detail.html:75
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vcollection/Detail.html:74
+//line views/vcollection/Detail.html:75
 	p.StreamBody(qw422016, as, ps)
-//line views/vcollection/Detail.html:74
+//line views/vcollection/Detail.html:75
 	qt422016.ReleaseWriter(qw422016)
-//line views/vcollection/Detail.html:74
+//line views/vcollection/Detail.html:75
 }
 
-//line views/vcollection/Detail.html:74
+//line views/vcollection/Detail.html:75
 func (p *Detail) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vcollection/Detail.html:74
+//line views/vcollection/Detail.html:75
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vcollection/Detail.html:74
+//line views/vcollection/Detail.html:75
 	p.WriteBody(qb422016, as, ps)
-//line views/vcollection/Detail.html:74
+//line views/vcollection/Detail.html:75
 	qs422016 := string(qb422016.B)
-//line views/vcollection/Detail.html:74
+//line views/vcollection/Detail.html:75
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vcollection/Detail.html:74
+//line views/vcollection/Detail.html:75
 	return qs422016
-//line views/vcollection/Detail.html:74
+//line views/vcollection/Detail.html:75
 }
