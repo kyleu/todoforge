@@ -27,7 +27,7 @@
           <td><a href="/collection/item/{%= view.UUID(&model.ID) %}">{%= view.UUID(&model.ID) %}</a></td>
           <td class="nowrap">
             {%= view.UUID(&model.CollectionID) %}{% if x := collectionsByCollectionID.Get(model.CollectionID); x != nil %} ({%s x.TitleString() %}){% endif %}
-            <a title="Collection" href="{%s `/collection`+`/`+model.CollectionID.String() %}">{%= components.SVGRef("archive", 18, 18, "", ps) %}</a>
+            <a title="Collection" href="{%s `/collection`+`/`+model.CollectionID.String() %}">{%= components.SVGSimple("archive", 18, ps) %}</a>
           </td>
           <td><strong>{%= view.String(model.Name) %}</strong></td>
           <td>{%= view.Timestamp(&model.Created) %}</td>

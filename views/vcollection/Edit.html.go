@@ -48,7 +48,7 @@ func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 		qw422016.N().S(`    <div class="right"><a href="?prototype=random"><button>Random</button></a></div>
     <h3>`)
 //line views/vcollection/Edit.html:21
-		components.StreamSVGRefIcon(qw422016, `archive`, ps)
+		components.StreamSVGIcon(qw422016, `archive`, ps)
 //line views/vcollection/Edit.html:21
 		qw422016.N().S(` New Collection</h3>
     <form action="/collection/_new" class="mt" method="post">
@@ -64,10 +64,14 @@ func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
 //line views/vcollection/Edit.html:24
 		qw422016.E().S(p.Model.String())
 //line views/vcollection/Edit.html:24
-		qw422016.N().S(`]?"><button>Delete</button></a></div>
+		qw422016.N().S(`]?"><button>`)
+//line views/vcollection/Edit.html:24
+		components.StreamSVGButton(qw422016, "times", ps)
+//line views/vcollection/Edit.html:24
+		qw422016.N().S(`Delete</button></a></div>
     <h3>`)
 //line views/vcollection/Edit.html:25
-		components.StreamSVGRefIcon(qw422016, `archive`, ps)
+		components.StreamSVGIcon(qw422016, `archive`, ps)
 //line views/vcollection/Edit.html:25
 		qw422016.N().S(` Edit Collection [`)
 //line views/vcollection/Edit.html:25

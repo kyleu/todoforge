@@ -49,7 +49,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
     <div class="right">
       <a href="#modal-collection"><button type="button">`)
 //line views/vcollection/Detail.html:25
-	components.StreamSVGRef(qw422016, "file", 15, 15, "icon", ps)
+	components.StreamSVGButton(qw422016, "file", ps)
 //line views/vcollection/Detail.html:25
 	qw422016.N().S(`JSON</button></a>
       <a href="`)
@@ -58,15 +58,13 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vcollection/Detail.html:26
 	qw422016.N().S(`/edit"><button>`)
 //line views/vcollection/Detail.html:26
-	components.StreamSVGRef(qw422016, "edit", 15, 15, "icon", ps)
+	components.StreamSVGButton(qw422016, "edit", ps)
 //line views/vcollection/Detail.html:26
 	qw422016.N().S(`Edit</button></a>
     </div>
     <h3>`)
 //line views/vcollection/Detail.html:28
-	components.StreamSVGRefIcon(qw422016, `archive`, ps)
-//line views/vcollection/Detail.html:28
-	qw422016.N().S(` `)
+	components.StreamSVGIcon(qw422016, `archive`, ps)
 //line views/vcollection/Detail.html:28
 	qw422016.E().S(p.Model.TitleString())
 //line views/vcollection/Detail.html:28
