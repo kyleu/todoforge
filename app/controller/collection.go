@@ -164,5 +164,6 @@ func collectionFromForm(r *http.Request, b []byte, setPK bool) (*collection.Coll
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to parse form")
 	}
-	return collection.FromMap(frm, setPK)
+	ret, _, err := collection.FromMap(frm, setPK)
+	return ret, err
 }
