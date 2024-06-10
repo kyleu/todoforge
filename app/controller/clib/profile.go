@@ -10,6 +10,7 @@ import (
 	"github.com/kyleu/todoforge/app/controller/csession"
 	"github.com/kyleu/todoforge/app/controller/cutil"
 	"github.com/kyleu/todoforge/app/lib/theme"
+	"github.com/kyleu/todoforge/app/util"
 	"github.com/kyleu/todoforge/views/vprofile"
 )
 
@@ -51,10 +52,7 @@ func ProfileSave(w http.ResponseWriter, r *http.Request) {
 
 		n := ps.Profile.Clone()
 
-		referrerDefault := frm.GetStringOpt("referrer")
-		if referrerDefault == "" {
-			referrerDefault = cutil.DefaultProfilePath
-		}
+		referrerDefault := util.OrDefault(frm.GetStringOpt("referrer"), cutil.DefaultProfilePath)
 
 		n.Name = frm.GetStringOpt("name")
 		n.Mode = frm.GetStringOpt("mode")

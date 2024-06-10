@@ -56,7 +56,7 @@
         <input id="accordion-ItemsByCollectionID" type="checkbox" hidden="hidden"{% if p.Params.Specifies(`item`) %} checked="checked"{% endif %} />
         <label for="accordion-ItemsByCollectionID">
           {%= components.ExpandCollapse(3, ps) %}
-          {%= components.SVGRef(`file`, 16, 16, `icon`, ps) %}
+          {%= components.SVGInline(`file`, 16, ps) %}
           {%s util.StringPlural(len(p.RelItemsByCollectionID), "Item") %} by [Collection ID]
         </label>
         <div class="bd"><div><div>
