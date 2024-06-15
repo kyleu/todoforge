@@ -102,7 +102,7 @@ func StreamTable(qw422016 *qt422016.Writer, models item.Items, collectionsByColl
 //line views/vcollection/vitem/Table.html:30
 		qw422016.N().S(`">`)
 //line views/vcollection/vitem/Table.html:30
-		components.StreamSVGSimple(qw422016, "archive", 18, ps)
+		components.StreamSVGLink(qw422016, `archive`, ps)
 //line views/vcollection/vitem/Table.html:30
 		qw422016.N().S(`</a>
           </td>

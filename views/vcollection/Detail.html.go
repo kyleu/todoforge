@@ -51,7 +51,7 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vcollection/Detail.html:25
 	components.StreamSVGButton(qw422016, "file", ps)
 //line views/vcollection/Detail.html:25
-	qw422016.N().S(`JSON</button></a>
+	qw422016.N().S(` JSON</button></a>
       <a href="`)
 //line views/vcollection/Detail.html:26
 	qw422016.E().S(p.Model.WebPath())
@@ -60,11 +60,13 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 //line views/vcollection/Detail.html:26
 	components.StreamSVGButton(qw422016, "edit", ps)
 //line views/vcollection/Detail.html:26
-	qw422016.N().S(`Edit</button></a>
+	qw422016.N().S(` Edit</button></a>
     </div>
     <h3>`)
 //line views/vcollection/Detail.html:28
 	components.StreamSVGIcon(qw422016, `archive`, ps)
+//line views/vcollection/Detail.html:28
+	qw422016.N().S(` `)
 //line views/vcollection/Detail.html:28
 	qw422016.E().S(p.Model.TitleString())
 //line views/vcollection/Detail.html:28
