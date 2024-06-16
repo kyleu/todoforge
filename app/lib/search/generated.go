@@ -22,7 +22,7 @@ func generatedSearch() []Provider {
 			return nil, err
 		}
 		return lo.Map(models, func(m *collection.Collection, _ int) *result.Result {
-			return result.NewResult("collection", m.String(), m.WebPath(), m.TitleString(), "archive", m, m, params.Q)
+			return result.NewResult("Collection", m.String(), m.WebPath(), m.TitleString(), "archive", m, m, params.Q)
 		}), nil
 	}
 	itemFunc := func(ctx context.Context, params *Params, as *app.State, page *cutil.PageState, logger util.Logger) (result.Results, error) {
@@ -32,7 +32,7 @@ func generatedSearch() []Provider {
 			return nil, err
 		}
 		return lo.Map(models, func(m *item.Item, _ int) *result.Result {
-			return result.NewResult("item", m.String(), m.WebPath(), m.TitleString(), "file", m, m, params.Q)
+			return result.NewResult("Item", m.String(), m.WebPath(), m.TitleString(), "file", m, m, params.Q)
 		}), nil
 	}
 	return []Provider{collectionFunc, itemFunc}
