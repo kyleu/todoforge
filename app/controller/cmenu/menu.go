@@ -7,6 +7,7 @@ import (
 	"github.com/kyleu/todoforge/app"
 	"github.com/kyleu/todoforge/app/lib/filter"
 	"github.com/kyleu/todoforge/app/lib/menu"
+	"github.com/kyleu/todoforge/app/lib/telemetry"
 	"github.com/kyleu/todoforge/app/lib/user"
 	"github.com/kyleu/todoforge/app/util"
 )
@@ -14,6 +15,8 @@ import (
 func MenuFor(
 	ctx context.Context, isAuthed bool, isAdmin bool, profile *user.Profile, params filter.ParamSet, as *app.State, logger util.Logger, //nolint:revive
 ) (menu.Items, any, error) {
+	ctx, sp, _ := telemetry.StartSpan(ctx, "menu", logger)
+	defer sp.Complete()
 	var ret menu.Items
 	var data any
 	// $PF_SECTION_START(menu)$
