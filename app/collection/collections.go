@@ -65,10 +65,7 @@ func (c Collections) ToCSV() ([]string, [][]string) {
 }
 
 func (c Collections) Random() *Collection {
-	if len(c) == 0 {
-		return nil
-	}
-	return c[util.RandomInt(len(c))]
+	return util.RandomElement(c)
 }
 
 func (c Collections) Clone() Collections {
