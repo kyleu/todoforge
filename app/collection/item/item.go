@@ -31,7 +31,10 @@ func (i *Item) String() string {
 }
 
 func (i *Item) TitleString() string {
-	return i.Name
+	if xx := i.Name; xx != "" {
+		return xx
+	}
+	return i.String()
 }
 
 func Random() *Item {

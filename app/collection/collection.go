@@ -30,7 +30,10 @@ func (c *Collection) String() string {
 }
 
 func (c *Collection) TitleString() string {
-	return c.Name
+	if xx := c.Name; xx != "" {
+		return xx
+	}
+	return c.String()
 }
 
 func Random() *Collection {
