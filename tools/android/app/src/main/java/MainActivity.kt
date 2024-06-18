@@ -1,4 +1,3 @@
-// Content managed by Project Forge, see [projectforge.md] for details.
 package dev.kyleu.todoforge
 
 import android.os.Bundle

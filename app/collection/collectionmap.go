@@ -1,4 +1,3 @@
-// Package collection - Content managed by Project Forge, see [projectforge.md] for details.
 package collection
 
 import "github.com/kyleu/todoforge/app/util"

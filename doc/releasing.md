@@ -1,4 +1,3 @@
-<!--- Content managed by Project Forge, see [projectforge.md] for details. -->
 # Releasing
 
 TODO Forge uses `goreleaser` to create build artifacts.

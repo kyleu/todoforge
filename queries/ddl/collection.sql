@@ -1,4 +1,3 @@
--- Content managed by Project Forge, see [projectforge.md] for details.
 -- {% func CollectionDrop() %}
 drop table if exists "collection";
 -- {% endfunc %}
