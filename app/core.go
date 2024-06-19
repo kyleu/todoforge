@@ -11,7 +11,6 @@ type CoreServices struct {
 	Audit *audit.Service
 }
 
-//nolint:revive
 func initCoreServices(ctx context.Context, st *State, auditSvc *audit.Service, logger util.Logger) CoreServices {
 	return CoreServices{
 		Audit: auditSvc,
