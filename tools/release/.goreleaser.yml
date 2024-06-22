@@ -1,4 +1,6 @@
 # http://goreleaser.com
+version: 2
+
 project_name: todoforge
 
 archives:
@@ -15,7 +17,7 @@ brews:
     commit_author:
       name: "Kyle U"
       email: "todoforge@kyleu.com"
-    folder: Formula
+    directory: Formula
     homepage: "https://github.com/kyleu/todoforge"
     description: "This app is almost entirely generated via Project Forge. It manages collections of todo items, and not much else."
     license: "MIT"
