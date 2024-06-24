@@ -68,6 +68,6 @@ func GraphQLRun(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", err
 		}
-		return cutil.RespondMIME("", "application/json", "json", util.ToJSONBytes(rsp, true), ps.W)
+		return cutil.RespondJSON(ps.W, "", rsp)
 	})
 }
