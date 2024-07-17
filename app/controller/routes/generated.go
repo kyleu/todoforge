@@ -9,21 +9,33 @@ import (
 	"github.com/kyleu/todoforge/app/controller/ccollection"
 )
 
+const routeNew, routeRandom, routeEdit, routeDelete = "/_new", "/_random", "/edit", "/delete"
+
 func generatedRoutes(r *mux.Router) {
-	makeRoute(r, http.MethodGet, "/collection/item", ccollection.ItemList)
-	makeRoute(r, http.MethodGet, "/collection/item/_new", ccollection.ItemCreateForm)
-	makeRoute(r, http.MethodPost, "/collection/item/_new", ccollection.ItemCreate)
-	makeRoute(r, http.MethodGet, "/collection/item/_random", ccollection.ItemRandom)
-	makeRoute(r, http.MethodGet, "/collection/item/{id}", ccollection.ItemDetail)
-	makeRoute(r, http.MethodGet, "/collection/item/{id}/edit", ccollection.ItemEditForm)
-	makeRoute(r, http.MethodPost, "/collection/item/{id}/edit", ccollection.ItemEdit)
-	makeRoute(r, http.MethodGet, "/collection/item/{id}/delete", ccollection.ItemDelete)
-	makeRoute(r, http.MethodGet, "/collection", controller.CollectionList)
-	makeRoute(r, http.MethodGet, "/collection/_new", controller.CollectionCreateForm)
-	makeRoute(r, http.MethodPost, "/collection/_new", controller.CollectionCreate)
-	makeRoute(r, http.MethodGet, "/collection/_random", controller.CollectionRandom)
-	makeRoute(r, http.MethodGet, "/collection/{id}", controller.CollectionDetail)
-	makeRoute(r, http.MethodGet, "/collection/{id}/edit", controller.CollectionEditForm)
-	makeRoute(r, http.MethodPost, "/collection/{id}/edit", controller.CollectionEdit)
-	makeRoute(r, http.MethodGet, "/collection/{id}/delete", controller.CollectionDelete)
+	generatedRoutesItem(r, "/collection/item")
+	generatedRoutesCollection(r, "/collection")
+}
+
+func generatedRoutesItem(r *mux.Router, prefix string) {
+	const pkn = "/{id}"
+	makeRoute(r, http.MethodGet, prefix, ccollection.ItemList)
+	makeRoute(r, http.MethodGet, prefix+routeNew, ccollection.ItemCreateForm)
+	makeRoute(r, http.MethodPost, prefix+routeNew, ccollection.ItemCreate)
+	makeRoute(r, http.MethodGet, prefix+routeRandom, ccollection.ItemRandom)
+	makeRoute(r, http.MethodGet, prefix+pkn, ccollection.ItemDetail)
+	makeRoute(r, http.MethodGet, prefix+pkn+routeEdit, ccollection.ItemEditForm)
+	makeRoute(r, http.MethodPost, prefix+pkn+routeEdit, ccollection.ItemEdit)
+	makeRoute(r, http.MethodGet, prefix+pkn+routeDelete, ccollection.ItemDelete)
+}
+
+func generatedRoutesCollection(r *mux.Router, prefix string) {
+	const pkn = "/{id}"
+	makeRoute(r, http.MethodGet, prefix, controller.CollectionList)
+	makeRoute(r, http.MethodGet, prefix+routeNew, controller.CollectionCreateForm)
+	makeRoute(r, http.MethodPost, prefix+routeNew, controller.CollectionCreate)
+	makeRoute(r, http.MethodGet, prefix+routeRandom, controller.CollectionRandom)
+	makeRoute(r, http.MethodGet, prefix+pkn, controller.CollectionDetail)
+	makeRoute(r, http.MethodGet, prefix+pkn+routeEdit, controller.CollectionEditForm)
+	makeRoute(r, http.MethodPost, prefix+pkn+routeEdit, controller.CollectionEdit)
+	makeRoute(r, http.MethodGet, prefix+pkn+routeDelete, controller.CollectionDelete)
 }
