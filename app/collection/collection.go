@@ -1,6 +1,8 @@
 package collection
 
 import (
+	"net/url"
+	"path"
 	"time"
 
 	"github.com/google/uuid"
@@ -8,6 +10,15 @@ import (
 	"github.com/kyleu/todoforge/app/lib/svc"
 	"github.com/kyleu/todoforge/app/util"
 )
+
+const DefaultRoute = "/collection"
+
+func Route(paths ...string) string {
+	if len(paths) == 0 {
+		paths = []string{DefaultRoute}
+	}
+	return path.Join(paths...)
+}
 
 var _ svc.Model = (*Collection)(nil)
 
@@ -52,8 +63,11 @@ func (c *Collection) ToCSV() ([]string, [][]string) {
 	return FieldDescs.Keys(), [][]string{c.Strings()}
 }
 
-func (c *Collection) WebPath() string {
-	return "/collection/" + c.ID.String()
+func (c *Collection) WebPath(paths ...string) string {
+	if len(paths) == 0 {
+		paths = []string{DefaultRoute}
+	}
+	return path.Join(append(paths, url.QueryEscape(c.ID.String()))...)
 }
 
 func (c *Collection) ToData() []any {

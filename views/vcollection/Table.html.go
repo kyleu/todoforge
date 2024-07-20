@@ -28,7 +28,7 @@ var (
 )
 
 //line views/vcollection/Table.html:10
-func StreamTable(qw422016 *qt422016.Writer, models collection.Collections, params filter.ParamSet, as *app.State, ps *cutil.PageState) {
+func StreamTable(qw422016 *qt422016.Writer, models collection.Collections, params filter.ParamSet, as *app.State, ps *cutil.PageState, paths ...string) {
 //line views/vcollection/Table.html:10
 	qw422016.N().S(`
 `)
@@ -63,9 +63,9 @@ func StreamTable(qw422016 *qt422016.Writer, models collection.Collections, param
 	for _, model := range models {
 //line views/vcollection/Table.html:22
 		qw422016.N().S(`        <tr>
-          <td><a href="/collection/`)
+          <td><a href="`)
 //line views/vcollection/Table.html:24
-		view.StreamUUID(qw422016, &model.ID)
+		qw422016.E().S(model.WebPath(paths...))
 //line views/vcollection/Table.html:24
 		qw422016.N().S(`">`)
 //line views/vcollection/Table.html:24
@@ -108,22 +108,22 @@ func StreamTable(qw422016 *qt422016.Writer, models collection.Collections, param
 }
 
 //line views/vcollection/Table.html:37
-func WriteTable(qq422016 qtio422016.Writer, models collection.Collections, params filter.ParamSet, as *app.State, ps *cutil.PageState) {
+func WriteTable(qq422016 qtio422016.Writer, models collection.Collections, params filter.ParamSet, as *app.State, ps *cutil.PageState, paths ...string) {
 //line views/vcollection/Table.html:37
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line views/vcollection/Table.html:37
-	StreamTable(qw422016, models, params, as, ps)
+	StreamTable(qw422016, models, params, as, ps, paths...)
 //line views/vcollection/Table.html:37
 	qt422016.ReleaseWriter(qw422016)
 //line views/vcollection/Table.html:37
 }
 
 //line views/vcollection/Table.html:37
-func Table(models collection.Collections, params filter.ParamSet, as *app.State, ps *cutil.PageState) string {
+func Table(models collection.Collections, params filter.ParamSet, as *app.State, ps *cutil.PageState, paths ...string) string {
 //line views/vcollection/Table.html:37
 	qb422016 := qt422016.AcquireByteBuffer()
 //line views/vcollection/Table.html:37
-	WriteTable(qb422016, models, params, as, ps)
+	WriteTable(qb422016, models, params, as, ps, paths...)
 //line views/vcollection/Table.html:37
 	qs422016 := string(qb422016.B)
 //line views/vcollection/Table.html:37

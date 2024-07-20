@@ -29,7 +29,7 @@ var (
 )
 
 //line views/vcollection/vitem/Table.html:11
-func StreamTable(qw422016 *qt422016.Writer, models item.Items, collectionsByCollectionID collection.Collections, params filter.ParamSet, as *app.State, ps *cutil.PageState) {
+func StreamTable(qw422016 *qt422016.Writer, models item.Items, collectionsByCollectionID collection.Collections, params filter.ParamSet, as *app.State, ps *cutil.PageState, paths ...string) {
 //line views/vcollection/vitem/Table.html:11
 	qw422016.N().S(`
 `)
@@ -69,9 +69,9 @@ func StreamTable(qw422016 *qt422016.Writer, models item.Items, collectionsByColl
 	for _, model := range models {
 //line views/vcollection/vitem/Table.html:24
 		qw422016.N().S(`        <tr>
-          <td><a href="/collection/item/`)
+          <td><a href="`)
 //line views/vcollection/vitem/Table.html:26
-		view.StreamUUID(qw422016, &model.ID)
+		qw422016.E().S(model.WebPath(paths...))
 //line views/vcollection/vitem/Table.html:26
 		qw422016.N().S(`">`)
 //line views/vcollection/vitem/Table.html:26
@@ -96,7 +96,7 @@ func StreamTable(qw422016 *qt422016.Writer, models item.Items, collectionsByColl
 		qw422016.N().S(`
             <a title="Collection" href="`)
 //line views/vcollection/vitem/Table.html:29
-		qw422016.E().S(`/collection` + `/` + model.CollectionID.String())
+		qw422016.E().S(model.WebPath(paths...))
 //line views/vcollection/vitem/Table.html:29
 		qw422016.N().S(`">`)
 //line views/vcollection/vitem/Table.html:29
@@ -140,22 +140,22 @@ func StreamTable(qw422016 *qt422016.Writer, models item.Items, collectionsByColl
 }
 
 //line views/vcollection/vitem/Table.html:43
-func WriteTable(qq422016 qtio422016.Writer, models item.Items, collectionsByCollectionID collection.Collections, params filter.ParamSet, as *app.State, ps *cutil.PageState) {
+func WriteTable(qq422016 qtio422016.Writer, models item.Items, collectionsByCollectionID collection.Collections, params filter.ParamSet, as *app.State, ps *cutil.PageState, paths ...string) {
 //line views/vcollection/vitem/Table.html:43
 	qw422016 := qt422016.AcquireWriter(qq422016)
 //line views/vcollection/vitem/Table.html:43
-	StreamTable(qw422016, models, collectionsByCollectionID, params, as, ps)
+	StreamTable(qw422016, models, collectionsByCollectionID, params, as, ps, paths...)
 //line views/vcollection/vitem/Table.html:43
 	qt422016.ReleaseWriter(qw422016)
 //line views/vcollection/vitem/Table.html:43
 }
 
 //line views/vcollection/vitem/Table.html:43
-func Table(models item.Items, collectionsByCollectionID collection.Collections, params filter.ParamSet, as *app.State, ps *cutil.PageState) string {
+func Table(models item.Items, collectionsByCollectionID collection.Collections, params filter.ParamSet, as *app.State, ps *cutil.PageState, paths ...string) string {
 //line views/vcollection/vitem/Table.html:43
 	qb422016 := qt422016.AcquireByteBuffer()
 //line views/vcollection/vitem/Table.html:43
-	WriteTable(qb422016, models, collectionsByCollectionID, params, as, ps)
+	WriteTable(qb422016, models, collectionsByCollectionID, params, as, ps, paths...)
 //line views/vcollection/vitem/Table.html:43
 	qs422016 := string(qb422016.B)
 //line views/vcollection/vitem/Table.html:43

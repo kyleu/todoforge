@@ -8,7 +8,7 @@
   "github.com/kyleu/todoforge/views/components/view"
 ) %}
 
-{% func Table(models item.Items, collectionsByCollectionID collection.Collections, params filter.ParamSet, as *app.State, ps *cutil.PageState) %}
+{% func Table(models item.Items, collectionsByCollectionID collection.Collections, params filter.ParamSet, as *app.State, ps *cutil.PageState, paths ...string) %}
   {%- code prms := params.Sanitized("item", ps.Logger) -%}
   <div class="overflow clear">
     <table>
@@ -23,10 +23,10 @@
       <tbody>
         {%- for _, model := range models -%}
         <tr>
-          <td><a href="/collection/item/{%= view.UUID(&model.ID) %}">{%= view.UUID(&model.ID) %}</a></td>
+          <td><a href="{%s model.WebPath(paths...) %}">{%= view.UUID(&model.ID) %}</a></td>
           <td class="nowrap">
             {%= view.UUID(&model.CollectionID) %}{% if x := collectionsByCollectionID.Get(model.CollectionID); x != nil %} ({%s x.TitleString() %}){% endif %}
-            <a title="Collection" href="{%s `/collection`+`/`+model.CollectionID.String() %}">{%= components.SVGLink(`archive`, ps) %}</a>
+            <a title="Collection" href="{%s model.WebPath(paths...) %}">{%= components.SVGLink(`archive`, ps) %}</a>
           </td>
           <td><strong>{%= view.String(model.Name) %}</strong></td>
           <td>{%= view.Timestamp(&model.Created) %}</td>

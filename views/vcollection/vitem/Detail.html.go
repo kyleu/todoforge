@@ -33,93 +33,98 @@ type Detail struct {
 	layout.Basic
 	Model                    *item.Item
 	CollectionByCollectionID *collection.Collection
+	Paths                    []string
 }
 
-//line views/vcollection/vitem/Detail.html:17
+//line views/vcollection/vitem/Detail.html:18
 func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vcollection/vitem/Detail.html:17
+//line views/vcollection/vitem/Detail.html:18
 	qw422016.N().S(`
   <div class="card">
     <div class="right">
       <a href="#modal-item"><button type="button">`)
-//line views/vcollection/vitem/Detail.html:20
+//line views/vcollection/vitem/Detail.html:21
 	components.StreamSVGButton(qw422016, "file", ps)
-//line views/vcollection/vitem/Detail.html:20
+//line views/vcollection/vitem/Detail.html:21
 	qw422016.N().S(` JSON</button></a>
       <a href="`)
-//line views/vcollection/vitem/Detail.html:21
-	qw422016.E().S(p.Model.WebPath())
-//line views/vcollection/vitem/Detail.html:21
+//line views/vcollection/vitem/Detail.html:22
+	qw422016.E().S(p.Model.WebPath(p.Paths...))
+//line views/vcollection/vitem/Detail.html:22
 	qw422016.N().S(`/edit"><button>`)
-//line views/vcollection/vitem/Detail.html:21
+//line views/vcollection/vitem/Detail.html:22
 	components.StreamSVGButton(qw422016, "edit", ps)
-//line views/vcollection/vitem/Detail.html:21
+//line views/vcollection/vitem/Detail.html:22
 	qw422016.N().S(` Edit</button></a>
     </div>
     <h3>`)
-//line views/vcollection/vitem/Detail.html:23
+//line views/vcollection/vitem/Detail.html:24
 	components.StreamSVGIcon(qw422016, `file`, ps)
-//line views/vcollection/vitem/Detail.html:23
+//line views/vcollection/vitem/Detail.html:24
 	qw422016.N().S(` `)
-//line views/vcollection/vitem/Detail.html:23
+//line views/vcollection/vitem/Detail.html:24
 	qw422016.E().S(p.Model.TitleString())
-//line views/vcollection/vitem/Detail.html:23
+//line views/vcollection/vitem/Detail.html:24
 	qw422016.N().S(`</h3>
-    <div><a href="/collection/item"><em>Item</em></a></div>
+    <div><a href="`)
+//line views/vcollection/vitem/Detail.html:25
+	qw422016.E().S(item.Route(p.Paths...))
+//line views/vcollection/vitem/Detail.html:25
+	qw422016.N().S(`"><em>Item</em></a></div>
     <div class="mt overflow full-width">
       <table>
         <tbody>
           <tr>
             <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">ID</th>
             <td>`)
-//line views/vcollection/vitem/Detail.html:30
+//line views/vcollection/vitem/Detail.html:31
 	view.StreamUUID(qw422016, &p.Model.ID)
-//line views/vcollection/vitem/Detail.html:30
+//line views/vcollection/vitem/Detail.html:31
 	qw422016.N().S(`</td>
           </tr>
           <tr>
             <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">Collection ID</th>
             <td class="nowrap">
               `)
-//line views/vcollection/vitem/Detail.html:35
+//line views/vcollection/vitem/Detail.html:36
 	view.StreamUUID(qw422016, &p.Model.CollectionID)
-//line views/vcollection/vitem/Detail.html:35
+//line views/vcollection/vitem/Detail.html:36
 	if p.CollectionByCollectionID != nil {
-//line views/vcollection/vitem/Detail.html:35
+//line views/vcollection/vitem/Detail.html:36
 		qw422016.N().S(` (`)
-//line views/vcollection/vitem/Detail.html:35
+//line views/vcollection/vitem/Detail.html:36
 		qw422016.E().S(p.CollectionByCollectionID.TitleString())
-//line views/vcollection/vitem/Detail.html:35
+//line views/vcollection/vitem/Detail.html:36
 		qw422016.N().S(`)`)
-//line views/vcollection/vitem/Detail.html:35
+//line views/vcollection/vitem/Detail.html:36
 	}
-//line views/vcollection/vitem/Detail.html:35
+//line views/vcollection/vitem/Detail.html:36
 	qw422016.N().S(`
               <a title="Collection" href="`)
-//line views/vcollection/vitem/Detail.html:36
-	qw422016.E().S(`/collection` + `/` + p.Model.CollectionID.String())
-//line views/vcollection/vitem/Detail.html:36
+//line views/vcollection/vitem/Detail.html:37
+	qw422016.E().S(p.Model.WebPath(p.Paths...))
+//line views/vcollection/vitem/Detail.html:37
 	qw422016.N().S(`">`)
-//line views/vcollection/vitem/Detail.html:36
+//line views/vcollection/vitem/Detail.html:37
 	components.StreamSVGLink(qw422016, `archive`, ps)
-//line views/vcollection/vitem/Detail.html:36
+//line views/vcollection/vitem/Detail.html:37
 	qw422016.N().S(`</a>
             </td>
           </tr>
           <tr>
             <th class="shrink" title="String text">Name</th>
             <td><strong>`)
-//line views/vcollection/vitem/Detail.html:41
+//line views/vcollection/vitem/Detail.html:42
 	view.StreamString(qw422016, p.Model.Name)
-//line views/vcollection/vitem/Detail.html:41
+//line views/vcollection/vitem/Detail.html:42
 	qw422016.N().S(`</strong></td>
           </tr>
           <tr>
             <th class="shrink" title="Date and time, in almost any format">Created</th>
             <td>`)
-//line views/vcollection/vitem/Detail.html:45
+//line views/vcollection/vitem/Detail.html:46
 	view.StreamTimestamp(qw422016, &p.Model.Created)
-//line views/vcollection/vitem/Detail.html:45
+//line views/vcollection/vitem/Detail.html:46
 	qw422016.N().S(`</td>
           </tr>
         </tbody>
@@ -127,38 +132,38 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
     </div>
   </div>
 `)
-//line views/vcollection/vitem/Detail.html:52
+//line views/vcollection/vitem/Detail.html:53
 	qw422016.N().S(`  `)
-//line views/vcollection/vitem/Detail.html:53
+//line views/vcollection/vitem/Detail.html:54
 	components.StreamJSONModal(qw422016, "item", "Item JSON", p.Model, 1)
-//line views/vcollection/vitem/Detail.html:53
+//line views/vcollection/vitem/Detail.html:54
 	qw422016.N().S(`
 `)
-//line views/vcollection/vitem/Detail.html:54
+//line views/vcollection/vitem/Detail.html:55
 }
 
-//line views/vcollection/vitem/Detail.html:54
+//line views/vcollection/vitem/Detail.html:55
 func (p *Detail) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vcollection/vitem/Detail.html:54
+//line views/vcollection/vitem/Detail.html:55
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vcollection/vitem/Detail.html:54
+//line views/vcollection/vitem/Detail.html:55
 	p.StreamBody(qw422016, as, ps)
-//line views/vcollection/vitem/Detail.html:54
+//line views/vcollection/vitem/Detail.html:55
 	qt422016.ReleaseWriter(qw422016)
-//line views/vcollection/vitem/Detail.html:54
+//line views/vcollection/vitem/Detail.html:55
 }
 
-//line views/vcollection/vitem/Detail.html:54
+//line views/vcollection/vitem/Detail.html:55
 func (p *Detail) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vcollection/vitem/Detail.html:54
+//line views/vcollection/vitem/Detail.html:55
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vcollection/vitem/Detail.html:54
+//line views/vcollection/vitem/Detail.html:55
 	p.WriteBody(qb422016, as, ps)
-//line views/vcollection/vitem/Detail.html:54
+//line views/vcollection/vitem/Detail.html:55
 	qs422016 := string(qb422016.B)
-//line views/vcollection/vitem/Detail.html:54
+//line views/vcollection/vitem/Detail.html:55
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vcollection/vitem/Detail.html:54
+//line views/vcollection/vitem/Detail.html:55
 	return qs422016
-//line views/vcollection/vitem/Detail.html:54
+//line views/vcollection/vitem/Detail.html:55
 }

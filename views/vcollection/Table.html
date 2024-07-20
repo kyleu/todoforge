@@ -7,7 +7,7 @@
   "github.com/kyleu/todoforge/views/components/view"
 ) %}
 
-{% func Table(models collection.Collections, params filter.ParamSet, as *app.State, ps *cutil.PageState) %}
+{% func Table(models collection.Collections, params filter.ParamSet, as *app.State, ps *cutil.PageState, paths ...string) %}
   {%- code prms := params.Sanitized("collection", ps.Logger) -%}
   <div class="overflow clear">
     <table>
@@ -21,7 +21,7 @@
       <tbody>
         {%- for _, model := range models -%}
         <tr>
-          <td><a href="/collection/{%= view.UUID(&model.ID) %}">{%= view.UUID(&model.ID) %}</a></td>
+          <td><a href="{%s model.WebPath(paths...) %}">{%= view.UUID(&model.ID) %}</a></td>
           <td><strong>{%= view.String(model.Name) %}</strong></td>
           <td>{%= view.Timestamp(&model.Created) %}</td>
         </tr>
