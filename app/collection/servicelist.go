@@ -6,9 +6,11 @@ import (
 
 	"github.com/jmoiron/sqlx"
 	"github.com/pkg/errors"
+	"github.com/samber/lo"
 
 	"github.com/kyleu/todoforge/app/lib/database"
 	"github.com/kyleu/todoforge/app/lib/filter"
+	"github.com/kyleu/todoforge/app/lib/search/result"
 	"github.com/kyleu/todoforge/app/util"
 )
 
@@ -74,4 +76,14 @@ func (s *Service) Search(ctx context.Context, query string, tx *sqlx.Tx, params 
 		return nil, err
 	}
 	return ret.ToCollections(), nil
+}
+
+func (s *Service) SearchEntries(ctx context.Context, query string, tx *sqlx.Tx, params *filter.Params, logger util.Logger) (result.Results, error) {
+	ret, err := s.Search(ctx, query, tx, params, logger)
+	if err != nil {
+		return nil, err
+	}
+	return lo.Map(ret, func(m *Collection, _ int) *result.Result {
+		return result.NewResult("Collection", m.String(), m.WebPath(), m.TitleString(), "archive", m, m, query)
+	}), nil
 }
