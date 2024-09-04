@@ -96,7 +96,11 @@ func StreamTable(qw422016 *qt422016.Writer, models item.Items, collectionsByColl
 		qw422016.N().S(`
             <a title="Collection" href="`)
 //line views/vcollection/vitem/Table.html:29
-		qw422016.E().S(model.WebPath(paths...))
+		if x := collectionsByCollectionID.Get(model.CollectionID); x != nil {
+//line views/vcollection/vitem/Table.html:29
+			qw422016.E().S(x.WebPath(paths...))
+//line views/vcollection/vitem/Table.html:29
+		}
 //line views/vcollection/vitem/Table.html:29
 		qw422016.N().S(`">`)
 //line views/vcollection/vitem/Table.html:29

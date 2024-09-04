@@ -34,7 +34,7 @@
             <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">Collection ID</th>
             <td class="nowrap">
               {%= view.UUID(&p.Model.CollectionID) %}{% if p.CollectionByCollectionID != nil %} ({%s p.CollectionByCollectionID.TitleString() %}){% endif %}
-              <a title="Collection" href="{%s p.Model.WebPath(p.Paths...) %}">{%= components.SVGLink(`archive`, ps) %}</a>
+              <a title="Collection" href="{% if x := p.CollectionByCollectionID; x != nil %}{%s x.WebPath(p.Paths...) %}{% endif %}">{%= components.SVGLink(`archive`, ps) %}</a>
             </td>
           </tr>
           <tr>

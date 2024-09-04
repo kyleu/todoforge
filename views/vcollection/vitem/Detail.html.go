@@ -102,7 +102,11 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.N().S(`
               <a title="Collection" href="`)
 //line views/vcollection/vitem/Detail.html:37
-	qw422016.E().S(p.Model.WebPath(p.Paths...))
+	if x := p.CollectionByCollectionID; x != nil {
+//line views/vcollection/vitem/Detail.html:37
+		qw422016.E().S(x.WebPath(p.Paths...))
+//line views/vcollection/vitem/Detail.html:37
+	}
 //line views/vcollection/vitem/Detail.html:37
 	qw422016.N().S(`">`)
 //line views/vcollection/vitem/Detail.html:37
