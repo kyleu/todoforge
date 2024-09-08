@@ -23,33 +23,37 @@
     </div>
     <h3>{%= components.SVGIcon(`file`, ps) %} {%s p.Model.TitleString() %}</h3>
     <div><a href="{%s item.Route(p.Paths...) %}"><em>Item</em></a></div>
-    <div class="mt overflow full-width">
-      <table>
-        <tbody>
-          <tr>
-            <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">ID</th>
-            <td>{%= view.UUID(&p.Model.ID) %}</td>
-          </tr>
-          <tr>
-            <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">Collection ID</th>
-            <td class="nowrap">
-              {%= view.UUID(&p.Model.CollectionID) %}{% if p.CollectionByCollectionID != nil %} ({%s p.CollectionByCollectionID.TitleString() %}){% endif %}
-              <a title="Collection" href="{% if x := p.CollectionByCollectionID; x != nil %}{%s x.WebPath(p.Paths...) %}{% endif %}">{%= components.SVGLink(`archive`, ps) %}</a>
-            </td>
-          </tr>
-          <tr>
-            <th class="shrink" title="String text">Name</th>
-            <td><strong>{%= view.String(p.Model.Name) %}</strong></td>
-          </tr>
-          <tr>
-            <th class="shrink" title="Date and time, in almost any format">Created</th>
-            <td>{%= view.Timestamp(&p.Model.Created) %}</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+    {%= DetailTable(p, ps) %}
   </div>
   {%- comment %}$PF_SECTION_START(extra)${% endcomment -%}
   {%- comment %}$PF_SECTION_END(extra)${% endcomment -%}
   {%= components.JSONModal("item", "Item JSON", p.Model, 1) %}
+{% endfunc %}
+
+{% func DetailTable(p *Detail, ps *cutil.PageState) %}
+  <div class="mt overflow full-width">
+    <table>
+      <tbody>
+        <tr>
+          <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">ID</th>
+          <td>{%= view.UUID(&p.Model.ID) %}</td>
+        </tr>
+        <tr>
+          <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">Collection ID</th>
+          <td class="nowrap">
+            {%= view.UUID(&p.Model.CollectionID) %}{% if p.CollectionByCollectionID != nil %} ({%s p.CollectionByCollectionID.TitleString() %}){% endif %}
+            <a title="Collection" href="{% if x := p.CollectionByCollectionID; x != nil %}{%s x.WebPath(p.Paths...) %}{% endif %}">{%= components.SVGLink(`archive`, ps) %}</a>
+          </td>
+        </tr>
+        <tr>
+          <th class="shrink" title="String text">Name</th>
+          <td><strong>{%= view.String(p.Model.Name) %}</strong></td>
+        </tr>
+        <tr>
+          <th class="shrink" title="Date and time, in almost any format">Created</th>
+          <td>{%= view.Timestamp(&p.Model.Created) %}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 {% endfunc %}

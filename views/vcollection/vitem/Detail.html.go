@@ -71,103 +71,142 @@ func (p *Detail) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.
 	qw422016.E().S(item.Route(p.Paths...))
 //line views/vcollection/vitem/Detail.html:25
 	qw422016.N().S(`"><em>Item</em></a></div>
-    <div class="mt overflow full-width">
-      <table>
-        <tbody>
-          <tr>
-            <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">ID</th>
-            <td>`)
-//line views/vcollection/vitem/Detail.html:31
-	view.StreamUUID(qw422016, &p.Model.ID)
-//line views/vcollection/vitem/Detail.html:31
-	qw422016.N().S(`</td>
-          </tr>
-          <tr>
-            <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">Collection ID</th>
-            <td class="nowrap">
-              `)
-//line views/vcollection/vitem/Detail.html:36
-	view.StreamUUID(qw422016, &p.Model.CollectionID)
-//line views/vcollection/vitem/Detail.html:36
-	if p.CollectionByCollectionID != nil {
-//line views/vcollection/vitem/Detail.html:36
-		qw422016.N().S(` (`)
-//line views/vcollection/vitem/Detail.html:36
-		qw422016.E().S(p.CollectionByCollectionID.TitleString())
-//line views/vcollection/vitem/Detail.html:36
-		qw422016.N().S(`)`)
-//line views/vcollection/vitem/Detail.html:36
-	}
-//line views/vcollection/vitem/Detail.html:36
+    `)
+//line views/vcollection/vitem/Detail.html:26
+	StreamDetailTable(qw422016, p, ps)
+//line views/vcollection/vitem/Detail.html:26
 	qw422016.N().S(`
-              <a title="Collection" href="`)
-//line views/vcollection/vitem/Detail.html:37
-	if x := p.CollectionByCollectionID; x != nil {
-//line views/vcollection/vitem/Detail.html:37
-		qw422016.E().S(x.WebPath(p.Paths...))
-//line views/vcollection/vitem/Detail.html:37
-	}
-//line views/vcollection/vitem/Detail.html:37
-	qw422016.N().S(`">`)
-//line views/vcollection/vitem/Detail.html:37
-	components.StreamSVGLink(qw422016, `archive`, ps)
-//line views/vcollection/vitem/Detail.html:37
-	qw422016.N().S(`</a>
-            </td>
-          </tr>
-          <tr>
-            <th class="shrink" title="String text">Name</th>
-            <td><strong>`)
-//line views/vcollection/vitem/Detail.html:42
-	view.StreamString(qw422016, p.Model.Name)
-//line views/vcollection/vitem/Detail.html:42
-	qw422016.N().S(`</strong></td>
-          </tr>
-          <tr>
-            <th class="shrink" title="Date and time, in almost any format">Created</th>
-            <td>`)
-//line views/vcollection/vitem/Detail.html:46
-	view.StreamTimestamp(qw422016, &p.Model.Created)
-//line views/vcollection/vitem/Detail.html:46
-	qw422016.N().S(`</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
   </div>
 `)
-//line views/vcollection/vitem/Detail.html:53
+//line views/vcollection/vitem/Detail.html:29
 	qw422016.N().S(`  `)
-//line views/vcollection/vitem/Detail.html:54
+//line views/vcollection/vitem/Detail.html:30
 	components.StreamJSONModal(qw422016, "item", "Item JSON", p.Model, 1)
-//line views/vcollection/vitem/Detail.html:54
+//line views/vcollection/vitem/Detail.html:30
 	qw422016.N().S(`
 `)
-//line views/vcollection/vitem/Detail.html:55
+//line views/vcollection/vitem/Detail.html:31
 }
 
-//line views/vcollection/vitem/Detail.html:55
+//line views/vcollection/vitem/Detail.html:31
 func (p *Detail) WriteBody(qq422016 qtio422016.Writer, as *app.State, ps *cutil.PageState) {
-//line views/vcollection/vitem/Detail.html:55
+//line views/vcollection/vitem/Detail.html:31
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vcollection/vitem/Detail.html:55
+//line views/vcollection/vitem/Detail.html:31
 	p.StreamBody(qw422016, as, ps)
-//line views/vcollection/vitem/Detail.html:55
+//line views/vcollection/vitem/Detail.html:31
 	qt422016.ReleaseWriter(qw422016)
-//line views/vcollection/vitem/Detail.html:55
+//line views/vcollection/vitem/Detail.html:31
 }
 
-//line views/vcollection/vitem/Detail.html:55
+//line views/vcollection/vitem/Detail.html:31
 func (p *Detail) Body(as *app.State, ps *cutil.PageState) string {
-//line views/vcollection/vitem/Detail.html:55
+//line views/vcollection/vitem/Detail.html:31
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vcollection/vitem/Detail.html:55
+//line views/vcollection/vitem/Detail.html:31
 	p.WriteBody(qb422016, as, ps)
-//line views/vcollection/vitem/Detail.html:55
+//line views/vcollection/vitem/Detail.html:31
 	qs422016 := string(qb422016.B)
-//line views/vcollection/vitem/Detail.html:55
+//line views/vcollection/vitem/Detail.html:31
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vcollection/vitem/Detail.html:55
+//line views/vcollection/vitem/Detail.html:31
 	return qs422016
-//line views/vcollection/vitem/Detail.html:55
+//line views/vcollection/vitem/Detail.html:31
+}
+
+//line views/vcollection/vitem/Detail.html:33
+func StreamDetailTable(qw422016 *qt422016.Writer, p *Detail, ps *cutil.PageState) {
+//line views/vcollection/vitem/Detail.html:33
+	qw422016.N().S(`
+  <div class="mt overflow full-width">
+    <table>
+      <tbody>
+        <tr>
+          <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">ID</th>
+          <td>`)
+//line views/vcollection/vitem/Detail.html:39
+	view.StreamUUID(qw422016, &p.Model.ID)
+//line views/vcollection/vitem/Detail.html:39
+	qw422016.N().S(`</td>
+        </tr>
+        <tr>
+          <th class="shrink" title="UUID in format (00000000-0000-0000-0000-000000000000)">Collection ID</th>
+          <td class="nowrap">
+            `)
+//line views/vcollection/vitem/Detail.html:44
+	view.StreamUUID(qw422016, &p.Model.CollectionID)
+//line views/vcollection/vitem/Detail.html:44
+	if p.CollectionByCollectionID != nil {
+//line views/vcollection/vitem/Detail.html:44
+		qw422016.N().S(` (`)
+//line views/vcollection/vitem/Detail.html:44
+		qw422016.E().S(p.CollectionByCollectionID.TitleString())
+//line views/vcollection/vitem/Detail.html:44
+		qw422016.N().S(`)`)
+//line views/vcollection/vitem/Detail.html:44
+	}
+//line views/vcollection/vitem/Detail.html:44
+	qw422016.N().S(`
+            <a title="Collection" href="`)
+//line views/vcollection/vitem/Detail.html:45
+	if x := p.CollectionByCollectionID; x != nil {
+//line views/vcollection/vitem/Detail.html:45
+		qw422016.E().S(x.WebPath(p.Paths...))
+//line views/vcollection/vitem/Detail.html:45
+	}
+//line views/vcollection/vitem/Detail.html:45
+	qw422016.N().S(`">`)
+//line views/vcollection/vitem/Detail.html:45
+	components.StreamSVGLink(qw422016, `archive`, ps)
+//line views/vcollection/vitem/Detail.html:45
+	qw422016.N().S(`</a>
+          </td>
+        </tr>
+        <tr>
+          <th class="shrink" title="String text">Name</th>
+          <td><strong>`)
+//line views/vcollection/vitem/Detail.html:50
+	view.StreamString(qw422016, p.Model.Name)
+//line views/vcollection/vitem/Detail.html:50
+	qw422016.N().S(`</strong></td>
+        </tr>
+        <tr>
+          <th class="shrink" title="Date and time, in almost any format">Created</th>
+          <td>`)
+//line views/vcollection/vitem/Detail.html:54
+	view.StreamTimestamp(qw422016, &p.Model.Created)
+//line views/vcollection/vitem/Detail.html:54
+	qw422016.N().S(`</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+`)
+//line views/vcollection/vitem/Detail.html:59
+}
+
+//line views/vcollection/vitem/Detail.html:59
+func WriteDetailTable(qq422016 qtio422016.Writer, p *Detail, ps *cutil.PageState) {
+//line views/vcollection/vitem/Detail.html:59
+	qw422016 := qt422016.AcquireWriter(qq422016)
+//line views/vcollection/vitem/Detail.html:59
+	StreamDetailTable(qw422016, p, ps)
+//line views/vcollection/vitem/Detail.html:59
+	qt422016.ReleaseWriter(qw422016)
+//line views/vcollection/vitem/Detail.html:59
+}
+
+//line views/vcollection/vitem/Detail.html:59
+func DetailTable(p *Detail, ps *cutil.PageState) string {
+//line views/vcollection/vitem/Detail.html:59
+	qb422016 := qt422016.AcquireByteBuffer()
+//line views/vcollection/vitem/Detail.html:59
+	WriteDetailTable(qb422016, p, ps)
+//line views/vcollection/vitem/Detail.html:59
+	qs422016 := string(qb422016.B)
+//line views/vcollection/vitem/Detail.html:59
+	qt422016.ReleaseByteBuffer(qb422016)
+//line views/vcollection/vitem/Detail.html:59
+	return qs422016
+//line views/vcollection/vitem/Detail.html:59
 }

@@ -114,7 +114,7 @@ func (p *Edit) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cutil.Pa
   </div>
   <script>
     document.addEventListener("DOMContentLoaded", function() {
-      todoforge.autocomplete(document.getElementById("input-collectionID"), "/collection?collection.l=10", "q", (o) => o["name"] + " (" + o["id"] + ")", (o) => o["id"]);
+      todoforge.autocomplete(document.getElementById("input-collectionID"), "/collection?collection.l=10", "q", (o) => (o["name"] || "[no name]") + " (" + o["id"] + ")", (o) => o["id"]);
     });
   </script>
 `)
