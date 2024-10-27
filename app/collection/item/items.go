@@ -76,7 +76,7 @@ func (i Items) GetByCollectionIDs(collectionIDs ...uuid.UUID) Items {
 }
 
 func (i Items) ToCSV() ([]string, [][]string) {
-	return FieldDescs.Keys(), lo.Map(i, func(x *Item, _ int) []string {
+	return ItemFieldDescs.Keys(), lo.Map(i, func(x *Item, _ int) []string {
 		return x.Strings()
 	})
 }

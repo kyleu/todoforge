@@ -29,7 +29,7 @@ type Item struct {
 	Created      time.Time `json:"created,omitempty"`
 }
 
-func New(id uuid.UUID) *Item {
+func NewItem(id uuid.UUID) *Item {
 	return &Item{ID: id}
 }
 
@@ -48,7 +48,7 @@ func (i *Item) TitleString() string {
 	return i.String()
 }
 
-func Random() *Item {
+func RandomItem() *Item {
 	return &Item{
 		ID:           util.UUID(),
 		CollectionID: util.UUID(),
@@ -62,7 +62,7 @@ func (i *Item) Strings() []string {
 }
 
 func (i *Item) ToCSV() ([]string, [][]string) {
-	return FieldDescs.Keys(), [][]string{i.Strings()}
+	return ItemFieldDescs.Keys(), [][]string{i.Strings()}
 }
 
 func (i *Item) WebPath(paths ...string) string {
@@ -76,7 +76,7 @@ func (i *Item) ToData() []any {
 	return []any{i.ID, i.CollectionID, i.Name, i.Created}
 }
 
-var FieldDescs = util.FieldDescs{
+var ItemFieldDescs = util.FieldDescs{
 	{Key: "id", Title: "ID", Description: "", Type: "uuid"},
 	{Key: "collectionID", Title: "Collection ID", Description: "", Type: "uuid"},
 	{Key: "name", Title: "Name", Description: "", Type: "string"},

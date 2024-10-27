@@ -6,7 +6,7 @@ func (i *Item) ToMap() util.ValueMap {
 	return util.ValueMap{"id": i.ID, "collectionID": i.CollectionID, "name": i.Name, "created": i.Created}
 }
 
-func FromMap(m util.ValueMap, setPK bool) (*Item, util.ValueMap, error) {
+func ItemFromMap(m util.ValueMap, setPK bool) (*Item, util.ValueMap, error) {
 	ret := &Item{}
 	extra := util.ValueMap{}
 	for k, v := range m {

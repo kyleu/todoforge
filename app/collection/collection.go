@@ -28,7 +28,7 @@ type Collection struct {
 	Created time.Time `json:"created,omitempty"`
 }
 
-func New(id uuid.UUID) *Collection {
+func NewCollection(id uuid.UUID) *Collection {
 	return &Collection{ID: id}
 }
 
@@ -47,7 +47,7 @@ func (c *Collection) TitleString() string {
 	return c.String()
 }
 
-func Random() *Collection {
+func RandomCollection() *Collection {
 	return &Collection{
 		ID:      util.UUID(),
 		Name:    util.RandomString(12),
@@ -60,7 +60,7 @@ func (c *Collection) Strings() []string {
 }
 
 func (c *Collection) ToCSV() ([]string, [][]string) {
-	return FieldDescs.Keys(), [][]string{c.Strings()}
+	return CollectionFieldDescs.Keys(), [][]string{c.Strings()}
 }
 
 func (c *Collection) WebPath(paths ...string) string {
@@ -74,7 +74,7 @@ func (c *Collection) ToData() []any {
 	return []any{c.ID, c.Name, c.Created}
 }
 
-var FieldDescs = util.FieldDescs{
+var CollectionFieldDescs = util.FieldDescs{
 	{Key: "id", Title: "ID", Description: "", Type: "uuid"},
 	{Key: "name", Title: "Name", Description: "", Type: "string"},
 	{Key: "created", Title: "Created", Description: "", Type: "timestamp"},

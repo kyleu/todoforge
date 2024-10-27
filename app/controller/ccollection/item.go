@@ -69,7 +69,7 @@ func ItemCreateForm(w http.ResponseWriter, r *http.Request) {
 	controller.Act("item.create.form", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &item.Item{}
 		if r.URL.Query().Get("prototype") == util.KeyRandom {
-			ret = item.Random()
+			ret = item.RandomItem()
 			randomCollection, err := as.Services.Collection.Random(ps.Context, nil, ps.Logger)
 			if err == nil && randomCollection != nil {
 				ret.CollectionID = randomCollection.ID
@@ -170,6 +170,6 @@ func itemFromForm(r *http.Request, b []byte, setPK bool) (*item.Item, error) {
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to parse form")
 	}
-	ret, _, err := item.FromMap(frm, setPK)
+	ret, _, err := item.ItemFromMap(frm, setPK)
 	return ret, err
 }

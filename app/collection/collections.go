@@ -58,7 +58,7 @@ func (c Collections) GetByIDs(ids ...uuid.UUID) Collections {
 }
 
 func (c Collections) ToCSV() ([]string, [][]string) {
-	return FieldDescs.Keys(), lo.Map(c, func(x *Collection, _ int) []string {
+	return CollectionFieldDescs.Keys(), lo.Map(c, func(x *Collection, _ int) []string {
 		return x.Strings()
 	})
 }

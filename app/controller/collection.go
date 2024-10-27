@@ -66,7 +66,7 @@ func CollectionCreateForm(w http.ResponseWriter, r *http.Request) {
 	Act("collection.create.form", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &collection.Collection{}
 		if r.URL.Query().Get("prototype") == util.KeyRandom {
-			ret = collection.Random()
+			ret = collection.RandomCollection()
 		}
 		ps.SetTitleAndData("Create [Collection]", ret)
 		ps.Data = ret
@@ -163,6 +163,6 @@ func collectionFromForm(r *http.Request, b []byte, setPK bool) (*collection.Coll
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to parse form")
 	}
-	ret, _, err := collection.FromMap(frm, setPK)
+	ret, _, err := collection.CollectionFromMap(frm, setPK)
 	return ret, err
 }
