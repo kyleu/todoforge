@@ -1,8 +1,6 @@
 package item
 
 import (
-	"slices"
-
 	"github.com/google/uuid"
 	"github.com/samber/lo"
 
@@ -86,5 +84,7 @@ func (i Items) Random() *Item {
 }
 
 func (i Items) Clone() Items {
-	return slices.Clone(i)
+	return lo.Map(i, func(xx *Item, _ int) *Item {
+		return xx.Clone()
+	})
 }
