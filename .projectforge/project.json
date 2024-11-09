@@ -2,7 +2,7 @@
   "key": "todoforge",
   "name": "TODO Forge",
   "icon": "todo",
-  "version": "0.1.28",
+  "version": "0.1.29",
   "package": "github.com/kyleu/todoforge",
   "port": 12000,
   "modules": [
