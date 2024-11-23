@@ -73,6 +73,18 @@ func (i Items) GetByCollectionIDs(collectionIDs ...uuid.UUID) Items {
 	})
 }
 
+func (i Items) ToMaps() []util.ValueMap {
+	return lo.Map(i, func(x *Item, _ int) util.ValueMap {
+		return x.ToMap()
+	})
+}
+
+func (i Items) ToOrderedMaps() util.OrderedMaps[any] {
+	return lo.Map(i, func(x *Item, _ int) *util.OrderedMap[any] {
+		return x.ToOrderedMap()
+	})
+}
+
 func (i Items) ToCSV() ([]string, [][]string) {
 	return ItemFieldDescs.Keys(), lo.Map(i, func(x *Item, _ int) []string {
 		return x.Strings()
