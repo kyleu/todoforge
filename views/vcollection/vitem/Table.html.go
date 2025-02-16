@@ -81,90 +81,95 @@ func StreamTable(qw422016 *qt422016.Writer, models item.Items, collectionsByColl
           <td class="nowrap">
             `)
 //line views/vcollection/vitem/Table.html:28
-		view.StreamUUID(qw422016, &model.CollectionID)
-//line views/vcollection/vitem/Table.html:28
 		if x := collectionsByCollectionID.Get(model.CollectionID); x != nil {
 //line views/vcollection/vitem/Table.html:28
-			qw422016.N().S(` (`)
-//line views/vcollection/vitem/Table.html:28
-			qw422016.E().S(x.TitleString())
-//line views/vcollection/vitem/Table.html:28
-			qw422016.N().S(`)`)
-//line views/vcollection/vitem/Table.html:28
-		}
-//line views/vcollection/vitem/Table.html:28
-		qw422016.N().S(`
-            <a title="Collection" href="`)
+			qw422016.N().S(`
+            `)
 //line views/vcollection/vitem/Table.html:29
-		if x := collectionsByCollectionID.Get(model.CollectionID); x != nil {
+			qw422016.E().S(x.TitleString())
+//line views/vcollection/vitem/Table.html:29
+			qw422016.N().S(` <a title="Collection" href="`)
 //line views/vcollection/vitem/Table.html:29
 			qw422016.E().S(x.WebPath(paths...))
 //line views/vcollection/vitem/Table.html:29
+			qw422016.N().S(`">`)
+//line views/vcollection/vitem/Table.html:29
+			components.StreamSVGLink(qw422016, `archive`, ps)
+//line views/vcollection/vitem/Table.html:29
+			qw422016.N().S(`</a>
+            `)
+//line views/vcollection/vitem/Table.html:30
+		} else {
+//line views/vcollection/vitem/Table.html:30
+			qw422016.N().S(`
+            `)
+//line views/vcollection/vitem/Table.html:31
+			view.StreamUUID(qw422016, &model.CollectionID)
+//line views/vcollection/vitem/Table.html:31
+			qw422016.N().S(`
+            `)
+//line views/vcollection/vitem/Table.html:32
 		}
-//line views/vcollection/vitem/Table.html:29
-		qw422016.N().S(`">`)
-//line views/vcollection/vitem/Table.html:29
-		components.StreamSVGLink(qw422016, `archive`, ps)
-//line views/vcollection/vitem/Table.html:29
-		qw422016.N().S(`</a>
+//line views/vcollection/vitem/Table.html:32
+		qw422016.N().S(`
           </td>
           <td><strong>`)
-//line views/vcollection/vitem/Table.html:31
+//line views/vcollection/vitem/Table.html:34
 		view.StreamString(qw422016, model.Name)
-//line views/vcollection/vitem/Table.html:31
+//line views/vcollection/vitem/Table.html:34
 		qw422016.N().S(`</strong></td>
           <td>`)
-//line views/vcollection/vitem/Table.html:32
+//line views/vcollection/vitem/Table.html:35
 		view.StreamTimestamp(qw422016, &model.Created)
-//line views/vcollection/vitem/Table.html:32
+//line views/vcollection/vitem/Table.html:35
 		qw422016.N().S(`</td>
         </tr>
 `)
-//line views/vcollection/vitem/Table.html:34
+//line views/vcollection/vitem/Table.html:37
 	}
-//line views/vcollection/vitem/Table.html:34
+//line views/vcollection/vitem/Table.html:37
 	qw422016.N().S(`      </tbody>
     </table>
   </div>
 `)
-//line views/vcollection/vitem/Table.html:38
+//line views/vcollection/vitem/Table.html:41
 	if prms.HasNextPage(len(models)+prms.Offset) || prms.HasPreviousPage() {
-//line views/vcollection/vitem/Table.html:38
+//line views/vcollection/vitem/Table.html:41
 		qw422016.N().S(`  <hr />
   `)
-//line views/vcollection/vitem/Table.html:40
+//line views/vcollection/vitem/Table.html:43
 		components.StreamPagination(qw422016, len(models)+prms.Offset, prms, ps.URI)
-//line views/vcollection/vitem/Table.html:40
+//line views/vcollection/vitem/Table.html:43
 		qw422016.N().S(`
   <div class="clear"></div>
 `)
-//line views/vcollection/vitem/Table.html:42
+//line views/vcollection/vitem/Table.html:45
 	}
-//line views/vcollection/vitem/Table.html:43
+//line views/vcollection/vitem/Table.html:46
 }
 
-//line views/vcollection/vitem/Table.html:43
+//line views/vcollection/vitem/Table.html:46
 func WriteTable(qq422016 qtio422016.Writer, models item.Items, collectionsByCollectionID collection.Collections, params filter.ParamSet, as *app.State, ps *cutil.PageState, paths ...string) {
-//line views/vcollection/vitem/Table.html:43
+//line views/vcollection/vitem/Table.html:46
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line views/vcollection/vitem/Table.html:43
+//line views/vcollection/vitem/Table.html:46
 	StreamTable(qw422016, models, collectionsByCollectionID, params, as, ps, paths...)
-//line views/vcollection/vitem/Table.html:43
+//line views/vcollection/vitem/Table.html:46
 	qt422016.ReleaseWriter(qw422016)
-//line views/vcollection/vitem/Table.html:43
+//line views/vcollection/vitem/Table.html:46
 }
 
-//line views/vcollection/vitem/Table.html:43
+//line views/vcollection/vitem/Table.html:46
 func Table(models item.Items, collectionsByCollectionID collection.Collections, params filter.ParamSet, as *app.State, ps *cutil.PageState, paths ...string) string {
-//line views/vcollection/vitem/Table.html:43
+//line views/vcollection/vitem/Table.html:46
 	qb422016 := qt422016.AcquireByteBuffer()
-//line views/vcollection/vitem/Table.html:43
+//line views/vcollection/vitem/Table.html:46
 	WriteTable(qb422016, models, collectionsByCollectionID, params, as, ps, paths...)
-//line views/vcollection/vitem/Table.html:43
+//line views/vcollection/vitem/Table.html:46
 	qs422016 := string(qb422016.B)
-//line views/vcollection/vitem/Table.html:43
+//line views/vcollection/vitem/Table.html:46
 	qt422016.ReleaseByteBuffer(qb422016)
-//line views/vcollection/vitem/Table.html:43
+//line views/vcollection/vitem/Table.html:46
 	return qs422016
-//line views/vcollection/vitem/Table.html:43
+//line views/vcollection/vitem/Table.html:46
 }
