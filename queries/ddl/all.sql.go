@@ -35,76 +35,86 @@ func StreamDropAll(qw422016 *qt422016.Writer) {
 	qw422016.N().S(`
 -- `)
 //line queries/ddl/all.sql:4
+	StreamAuditDrop(qw422016)
+//line queries/ddl/all.sql:4
+	qw422016.N().S(`
+-- `)
+//line queries/ddl/all.sql:5
 }
 
-//line queries/ddl/all.sql:4
+//line queries/ddl/all.sql:5
 func WriteDropAll(qq422016 qtio422016.Writer) {
-//line queries/ddl/all.sql:4
+//line queries/ddl/all.sql:5
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line queries/ddl/all.sql:4
+//line queries/ddl/all.sql:5
 	StreamDropAll(qw422016)
-//line queries/ddl/all.sql:4
+//line queries/ddl/all.sql:5
 	qt422016.ReleaseWriter(qw422016)
-//line queries/ddl/all.sql:4
+//line queries/ddl/all.sql:5
 }
 
-//line queries/ddl/all.sql:4
+//line queries/ddl/all.sql:5
 func DropAll() string {
-//line queries/ddl/all.sql:4
+//line queries/ddl/all.sql:5
 	qb422016 := qt422016.AcquireByteBuffer()
-//line queries/ddl/all.sql:4
+//line queries/ddl/all.sql:5
 	WriteDropAll(qb422016)
-//line queries/ddl/all.sql:4
+//line queries/ddl/all.sql:5
 	qs422016 := string(qb422016.B)
-//line queries/ddl/all.sql:4
+//line queries/ddl/all.sql:5
 	qt422016.ReleaseByteBuffer(qb422016)
-//line queries/ddl/all.sql:4
+//line queries/ddl/all.sql:5
 	return qs422016
-//line queries/ddl/all.sql:4
+//line queries/ddl/all.sql:5
 }
 
 // --
 
-//line queries/ddl/all.sql:6
+//line queries/ddl/all.sql:7
 func StreamCreateAll(qw422016 *qt422016.Writer) {
-//line queries/ddl/all.sql:6
+//line queries/ddl/all.sql:7
 	qw422016.N().S(`
 -- `)
-//line queries/ddl/all.sql:7
+//line queries/ddl/all.sql:8
+	StreamAuditCreate(qw422016)
+//line queries/ddl/all.sql:8
+	qw422016.N().S(`
+-- `)
+//line queries/ddl/all.sql:9
 	StreamCollectionCreate(qw422016)
-//line queries/ddl/all.sql:7
+//line queries/ddl/all.sql:9
 	qw422016.N().S(`
 -- `)
-//line queries/ddl/all.sql:8
+//line queries/ddl/all.sql:10
 	StreamItemCreate(qw422016)
-//line queries/ddl/all.sql:8
+//line queries/ddl/all.sql:10
 	qw422016.N().S(`
 -- `)
-//line queries/ddl/all.sql:9
+//line queries/ddl/all.sql:11
 }
 
-//line queries/ddl/all.sql:9
+//line queries/ddl/all.sql:11
 func WriteCreateAll(qq422016 qtio422016.Writer) {
-//line queries/ddl/all.sql:9
+//line queries/ddl/all.sql:11
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line queries/ddl/all.sql:9
+//line queries/ddl/all.sql:11
 	StreamCreateAll(qw422016)
-//line queries/ddl/all.sql:9
+//line queries/ddl/all.sql:11
 	qt422016.ReleaseWriter(qw422016)
-//line queries/ddl/all.sql:9
+//line queries/ddl/all.sql:11
 }
 
-//line queries/ddl/all.sql:9
+//line queries/ddl/all.sql:11
 func CreateAll() string {
-//line queries/ddl/all.sql:9
+//line queries/ddl/all.sql:11
 	qb422016 := qt422016.AcquireByteBuffer()
-//line queries/ddl/all.sql:9
+//line queries/ddl/all.sql:11
 	WriteCreateAll(qb422016)
-//line queries/ddl/all.sql:9
+//line queries/ddl/all.sql:11
 	qs422016 := string(qb422016.B)
-//line queries/ddl/all.sql:9
+//line queries/ddl/all.sql:11
 	qt422016.ReleaseByteBuffer(qb422016)
-//line queries/ddl/all.sql:9
+//line queries/ddl/all.sql:11
 	return qs422016
-//line queries/ddl/all.sql:9
+//line queries/ddl/all.sql:11
 }

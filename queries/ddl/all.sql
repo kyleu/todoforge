@@ -1,9 +1,11 @@
 -- {% func DropAll() %}
 -- {%= ItemDrop() %}
 -- {%= CollectionDrop() %}
+-- {%= AuditDrop() %}
 -- {% endfunc %}
 
 -- {% func CreateAll() %}
+-- {%= AuditCreate() %}
 -- {%= CollectionCreate() %}
 -- {%= ItemCreate() %}
 -- {% endfunc %}
