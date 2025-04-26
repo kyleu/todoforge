@@ -72,6 +72,10 @@ func (i *Item) WebPath(paths ...string) string {
 	return path.Join(append(paths, url.QueryEscape(i.ID.String()))...)
 }
 
+func (i *Item) Breadcrumb(extra ...string) string {
+	return i.TitleString() + "||" + i.WebPath(extra...) + "**file"
+}
+
 func (i *Item) ToData() []any {
 	return []any{i.ID, i.CollectionID, i.Name, i.Created}
 }

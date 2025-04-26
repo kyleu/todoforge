@@ -70,6 +70,10 @@ func (c *Collection) WebPath(paths ...string) string {
 	return path.Join(append(paths, url.QueryEscape(c.ID.String()))...)
 }
 
+func (c *Collection) Breadcrumb(extra ...string) string {
+	return c.TitleString() + "||" + c.WebPath(extra...) + "**archive"
+}
+
 func (c *Collection) ToData() []any {
 	return []any{c.ID, c.Name, c.Created}
 }
