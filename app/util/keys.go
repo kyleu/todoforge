@@ -28,6 +28,8 @@ const (
 	OK    = "ok"
 	Error = "error"
 
+	DatabaseSQLite = "sqlite"
+	
 	// $PF_SECTION_START(keys)$
 	// $PF_SECTION_END(keys)$.
 )

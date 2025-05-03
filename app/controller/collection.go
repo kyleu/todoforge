@@ -69,7 +69,6 @@ func CollectionCreateForm(w http.ResponseWriter, r *http.Request) {
 			ret = collection.RandomCollection()
 		}
 		ps.SetTitleAndData("Create [Collection]", ret)
-		ps.Data = ret
 		return Render(r, as, &vcollection.Edit{Model: ret, IsNew: true}, ps, "collection", "Create")
 	})
 }

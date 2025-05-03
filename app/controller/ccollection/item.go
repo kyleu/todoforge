@@ -76,7 +76,6 @@ func ItemCreateForm(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 		ps.SetTitleAndData("Create [Item]", ret)
-		ps.Data = ret
 		return controller.Render(r, as, &vitem.Edit{Model: ret, IsNew: true}, ps, "collection", "item", "Create")
 	})
 }
