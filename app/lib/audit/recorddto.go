@@ -2,7 +2,6 @@ package audit
 
 import (
 	"fmt"
-	"strings"
 	"time"
 
 	"github.com/google/uuid"
@@ -16,7 +15,7 @@ var (
 	recordTableQuoted   = fmt.Sprintf("%q", recordTable)
 	recordColumns       = []string{"id", "audit_id", "t", "pk", "changes", "metadata", "occurred"}
 	recordColumnsQuoted = util.StringArrayQuoted(recordColumns)
-	recordColumnsString = strings.Join(recordColumnsQuoted, ", ")
+	recordColumnsString = util.StringJoin(recordColumnsQuoted, ", ")
 )
 
 type recordRow struct {
