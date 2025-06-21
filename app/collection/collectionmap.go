@@ -38,5 +38,5 @@ func CollectionFromMap(m util.ValueMap, setPK bool) (*Collection, util.ValueMap,
 
 func (c *Collection) ToOrderedMap() *util.OrderedMap[any] {
 	pairs := util.OrderedPairs[any]{{K: "id", V: c.ID}, {K: "name", V: c.Name}, {K: "created", V: c.Created}}
-	return util.NewOrderedMap[any](false, 4, pairs...)
+	return util.NewOrderedMap(false, 4, pairs...)
 }
