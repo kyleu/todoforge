@@ -1,6 +1,8 @@
 package main // import github.com/kyleu/todoforge
 
 import (
+	"context"
+
 	"github.com/kyleu/todoforge/app"
 	"github.com/kyleu/todoforge/app/cmd"
 )
@@ -12,5 +14,5 @@ var (
 )
 
 func main() {
-	cmd.Entrypoint(&app.BuildInfo{Version: version, Commit: commit, Date: date})
+	cmd.Entrypoint(context.Background(), &app.BuildInfo{Version: version, Commit: commit, Date: date})
 }
