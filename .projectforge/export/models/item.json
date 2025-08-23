@@ -8,8 +8,7 @@
   "icon": "file",
   "ordering": [
     {
-      "column": "name",
-      "asc": false
+      "column": "name"
     }
   ],
   "tags": [

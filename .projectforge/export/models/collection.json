@@ -5,8 +5,7 @@
   "icon": "archive",
   "ordering": [
     {
-      "column": "name",
-      "asc": false
+      "column": "name"
     }
   ],
   "tags": [
