@@ -22,10 +22,10 @@ func Route(paths ...string) string {
 var _ svc.Model = (*Item)(nil)
 
 type Item struct {
-	ID           uuid.UUID `json:"id,omitempty"`
-	CollectionID uuid.UUID `json:"collectionID,omitempty"`
-	Name         string    `json:"name,omitempty"`
-	Created      time.Time `json:"created,omitempty"`
+	ID           uuid.UUID `json:"id,omitzero"`
+	CollectionID uuid.UUID `json:"collectionID,omitzero"`
+	Name         string    `json:"name,omitzero"`
+	Created      time.Time `json:"created,omitzero"`
 }
 
 func NewItem(id uuid.UUID) *Item {
