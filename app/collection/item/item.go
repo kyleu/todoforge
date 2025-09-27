@@ -33,7 +33,7 @@ func NewItem(id uuid.UUID) *Item {
 }
 
 func (i *Item) Clone() *Item {
-	return &Item{i.ID, i.CollectionID, i.Name, i.Created}
+	return &Item{ID: i.ID, CollectionID: i.CollectionID, Name: i.Name, Created: i.Created}
 }
 
 func (i *Item) String() string {

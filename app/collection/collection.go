@@ -32,7 +32,7 @@ func NewCollection(id uuid.UUID) *Collection {
 }
 
 func (c *Collection) Clone() *Collection {
-	return &Collection{c.ID, c.Name, c.Created}
+	return &Collection{ID: c.ID, Name: c.Name, Created: c.Created}
 }
 
 func (c *Collection) String() string {
