@@ -56,8 +56,8 @@ func (c Collections) GetByIDs(ids ...uuid.UUID) Collections {
 }
 
 func (c Collections) ToMaps() []util.ValueMap {
-	return lo.Map(c, func(x *Collection, _ int) util.ValueMap {
-		return x.ToMap()
+	return lo.Map(c, func(xx *Collection, _ int) util.ValueMap {
+		return xx.ToMap()
 	})
 }
 
