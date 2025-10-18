@@ -80,8 +80,8 @@ func (i *Item) ToData() []any {
 }
 
 var ItemFieldDescs = util.FieldDescs{
-	{Key: "id", Title: "ID", Description: "", Type: "uuid"},
-	{Key: "collectionID", Title: "Collection ID", Description: "", Type: "uuid"},
-	{Key: "name", Title: "Name", Description: "", Type: "string"},
-	{Key: "created", Title: "Created", Description: "", Type: "timestamp"},
+	{Key: "id", Title: "ID", Type: "uuid"},
+	{Key: "collectionID", Title: "Collection ID", Type: "uuid"},
+	{Key: "name", Title: "Name", Type: "string"},
+	{Key: "created", Title: "Created", Type: "timestamp"},
 }

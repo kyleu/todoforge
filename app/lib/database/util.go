@@ -11,8 +11,6 @@ import (
 )
 
 const (
-	localhost = "localhost"
-
 	cfgUser     = "db_user"
 	cfgPassword = "db_password"
 	cfgSchema   = "db_schema"
