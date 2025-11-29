@@ -100,7 +100,7 @@ func ItemCreate(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", errors.Wrap(err, "unable to save newly-created Item")
 		}
-		msg := fmt.Sprintf("Item [%s] created", ret.String())
+		msg := fmt.Sprintf("Item [%s] created", ret.TitleString())
 		return controller.FlashAndRedir(true, msg, ret.WebPath(), ps)
 	})
 }
@@ -131,7 +131,7 @@ func ItemEdit(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", errors.Wrapf(err, "unable to update Item [%s]", frm.String())
 		}
-		msg := fmt.Sprintf("Item [%s] updated", frm.String())
+		msg := fmt.Sprintf("Item [%s] updated", frm.TitleString())
 		return controller.FlashAndRedir(true, msg, frm.WebPath(), ps)
 	})
 }
@@ -146,7 +146,7 @@ func ItemDelete(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return "", errors.Wrapf(err, "unable to delete item [%s]", ret.String())
 		}
-		msg := fmt.Sprintf("Item [%s] deleted", ret.String())
+		msg := fmt.Sprintf("Item [%s] deleted", ret.TitleString())
 		return controller.FlashAndRedir(true, msg, "/collection/item", ps)
 	})
 }
