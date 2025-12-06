@@ -55,6 +55,12 @@ func (c Collections) GetByIDs(ids ...uuid.UUID) Collections {
 	})
 }
 
+func (c Collections) ToMap() map[uuid.UUID]*Collection {
+	return lo.SliceToMap(c, func(xx *Collection) (uuid.UUID, *Collection) {
+		return xx.ID, xx
+	})
+}
+
 func (c Collections) ToMaps() []util.ValueMap {
 	return lo.Map(c, func(xx *Collection, _ int) util.ValueMap {
 		return xx.ToMap()

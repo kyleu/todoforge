@@ -33,6 +33,9 @@ func NewItem(id uuid.UUID) *Item {
 }
 
 func (i *Item) Clone() *Item {
+	if i == nil {
+		return nil
+	}
 	return &Item{ID: i.ID, CollectionID: i.CollectionID, Name: i.Name, Created: i.Created}
 }
 

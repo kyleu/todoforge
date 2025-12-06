@@ -32,6 +32,9 @@ func NewCollection(id uuid.UUID) *Collection {
 }
 
 func (c *Collection) Clone() *Collection {
+	if c == nil {
+		return nil
+	}
 	return &Collection{ID: c.ID, Name: c.Name, Created: c.Created}
 }
 
