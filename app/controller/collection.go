@@ -16,7 +16,7 @@ import (
 
 func CollectionList(w http.ResponseWriter, r *http.Request) {
 	Act("collection.list", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
-		q := strings.TrimSpace(r.URL.Query().Get("q"))
+		q := strings.TrimSpace(cutil.QueryStringString(r, "q"))
 		prms := ps.Params.Sanitized("collection", ps.Logger)
 		var ret collection.Collections
 		var err error
@@ -65,7 +65,7 @@ func CollectionDetail(w http.ResponseWriter, r *http.Request) {
 func CollectionCreateForm(w http.ResponseWriter, r *http.Request) {
 	Act("collection.create.form", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &collection.Collection{}
-		if r.URL.Query().Get("prototype") == util.KeyRandom {
+		if cutil.QueryStringString(r, "prototype") == util.KeyRandom {
 			ret = collection.RandomCollection()
 		}
 		ps.SetTitleAndData("Create [Collection]", ret)

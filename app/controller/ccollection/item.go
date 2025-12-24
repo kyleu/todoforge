@@ -19,7 +19,7 @@ import (
 
 func ItemList(w http.ResponseWriter, r *http.Request) {
 	controller.Act("item.list", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
-		q := strings.TrimSpace(r.URL.Query().Get("q"))
+		q := strings.TrimSpace(cutil.QueryStringString(r, "q"))
 		prms := ps.Params.Sanitized("item", ps.Logger)
 		var ret item.Items
 		var err error
@@ -68,7 +68,7 @@ func ItemDetail(w http.ResponseWriter, r *http.Request) {
 func ItemCreateForm(w http.ResponseWriter, r *http.Request) {
 	controller.Act("item.create.form", w, r, func(as *app.State, ps *cutil.PageState) (string, error) {
 		ret := &item.Item{}
-		if r.URL.Query().Get("prototype") == util.KeyRandom {
+		if cutil.QueryStringString(r, "prototype") == util.KeyRandom {
 			ret = item.RandomItem()
 			randomCollection, err := as.Services.Collection.Random(ps.Context, nil, ps.Logger)
 			if err == nil && randomCollection != nil {

@@ -114,7 +114,7 @@ func (p *Settings) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cuti
 	qw422016.N().S(` Admin Functions</h3>
     `)
 //line views/vadmin/Settings.html:39
-	streamsettingsLink(qw422016, "/admin/server", "archive", "App Information", "All sorts of info about the server and runtime", ps)
+	streamsettingsLink(qw422016, "/admin/server", "list", "App Information", "All sorts of info about the server and runtime", ps)
 //line views/vadmin/Settings.html:39
 	qw422016.N().S(`
     `)
@@ -124,7 +124,7 @@ func (p *Settings) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cuti
 	qw422016.N().S(`
     `)
 //line views/vadmin/Settings.html:41
-	streamsettingsLink(qw422016, "/theme", "archive", "Edit Themes", "Configure the design themes available to end users", ps)
+	streamsettingsLink(qw422016, "/theme", "theme", "Edit Themes", "Configure the design themes available to end users", ps)
 //line views/vadmin/Settings.html:41
 	qw422016.N().S(`
     `)
@@ -175,22 +175,22 @@ func (p *Settings) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cuti
 	qw422016.N().S(`
     `)
 //line views/vadmin/Settings.html:56
-	streamsettingsLink(qw422016, "/admin/gc", "cog", "Collect Garbage", "Runs the Go garbage collector", ps)
+	streamsettingsLink(qw422016, "/admin/gc", "fire", "Collect Garbage", "Runs the Go garbage collector", ps)
 //line views/vadmin/Settings.html:56
 	qw422016.N().S(`
     `)
 //line views/vadmin/Settings.html:57
-	streamsettingsLink(qw422016, "/admin/heap", "cog", "Write Memory Dump", "Writes a memory dump to <em>./tmp/mem.pprof</em>, use script to view", ps)
+	streamsettingsLink(qw422016, "/admin/heap", "file-archive", "Write Memory Dump", "Writes a memory dump to <em>./tmp/mem.pprof</em>, use script to view", ps)
 //line views/vadmin/Settings.html:57
 	qw422016.N().S(`
     `)
 //line views/vadmin/Settings.html:58
-	streamsettingsLink(qw422016, "/admin/cpu/start", "cog", "Start CPU Profile", "Profiles the CPU using <em>./tmp/cpu.pprof</em>, use script to view", ps)
+	streamsettingsLink(qw422016, "/admin/cpu/start", "play", "Start CPU Profile", "Profiles the CPU using <em>./tmp/cpu.pprof</em>, use script to view", ps)
 //line views/vadmin/Settings.html:58
 	qw422016.N().S(`
     `)
 //line views/vadmin/Settings.html:59
-	streamsettingsLink(qw422016, "/admin/cpu/stop", "cog", "Stop CPU Profile", "Stops the active CPU profile", ps)
+	streamsettingsLink(qw422016, "/admin/cpu/stop", "stop", "Stop CPU Profile", "Stops the active CPU profile", ps)
 //line views/vadmin/Settings.html:59
 	qw422016.N().S(`
     <div class="clear"></div>
@@ -208,7 +208,7 @@ func (p *Settings) StreamBody(qw422016 *qt422016.Writer, as *app.State, ps *cuti
 	qw422016.N().S(`
     `)
 //line views/vadmin/Settings.html:65
-	streamsettingsLink(qw422016, "/admin/migrations", "archive", "Migrations", "Shows the full content of all database SQL migrations", ps)
+	streamsettingsLink(qw422016, "/admin/migrations", "database", "Migrations", "Shows the full content of all database SQL migrations", ps)
 //line views/vadmin/Settings.html:65
 	qw422016.N().S(`
   </div>
