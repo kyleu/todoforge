@@ -1,6 +1,6 @@
 {
   "name": "client",
-  "version": "0.3.6",
+  "version": "0.3.7",
   "type": "module",
   "description": "This app is almost entirely generated via Project Forge. It manages collections of todo items, and not much else.",
   "repository": {
