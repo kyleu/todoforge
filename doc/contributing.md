@@ -5,8 +5,8 @@ Source code is available at [GitHub](https://github.com/kyleu/todoforge).
 ## Setup
 
 ```
-git clone https://github.com/kyleu/projectforge
-cd projectforge
+git clone https://github.com/kyleu/todoforge
+cd todoforge
 ./bin/bootstrap.sh
 ```
 
@@ -14,7 +14,7 @@ cd projectforge
 
 ```
 make build
-./build/debug/projectforge --help
+./build/debug/todoforge --help
 ./bin/dev.sh
 ```
 
