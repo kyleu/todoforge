@@ -4,12 +4,12 @@ version: 2
 project_name: todoforge
 
 archives:
-  - format: zip
+  - formats: ["zip"]
     wrap_in_directory: "false"
     files:
       - none*
 
-brews:
+homebrew_casks:
   -
     repository:
       owner: "kyleu"
@@ -17,12 +17,13 @@ brews:
     commit_author:
       name: "Kyle U"
       email: "todoforge@kyleu.com"
-    directory: Formula
+    directory: Casks
     homepage: "https://github.com/kyleu/todoforge"
     description: "This app is almost entirely generated via Project Forge. It manages collections of todo items, and not much else."
     license: "MIT"
     skip_upload: "false"
-    install: "bin.install \"todoforge\""
+    binaries:
+      - "todoforge"
 
 changelog:
   disable: true
@@ -40,16 +41,22 @@ checksum:
     # $PF_SECTION_START(checksums)$
     # $PF_SECTION_END(checksums)$
 
-dockers:
+dockers_v2:
   -
-    image_templates:
-      - "ghcr.io/kyleu/todoforge:{{ trimprefix .Tag \"v\" }}"
-      - "ghcr.io/kyleu/todoforge:latest"
+    id: release
+    images:
+      - "ghcr.io/kyleu/todoforge"
+    tags:
+      - "{{ trimprefix .Tag \"v\" }}"
+      - "latest"
     dockerfile: ./tools/release/Dockerfile.release
   -
-    image_templates:
-      - "ghcr.io/kyleu/todoforge:{{ trimprefix .Tag \"v\" }}-debug"
-      - "ghcr.io/kyleu/todoforge:latest-debug"
+    id: debug
+    images:
+      - "ghcr.io/kyleu/todoforge"
+    tags:
+      - "{{ trimprefix .Tag \"v\" }}-debug"
+      - "latest-debug"
     dockerfile: ./tools/release/Dockerfile.debug
 
 dist: "build/dist"
